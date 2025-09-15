@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lost & Found Auth Test</title>
+</head>
+<body>
+  <h1>Signup</h1>
+  <form id="signupForm">
+    <input type="text" id="display_name" placeholder="Full Name" required><br>
+    <input type="email" id="email" placeholder="Email (must be @csub.edu)" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <input type="password" id="confirm_password" placeholder="Confirm Password" required><br>
+    <button type="submit">Register</button>
+  </form>
+  <pre id="signupResult"></pre>
+
+  <h1>Login</h1>
+  <form id="loginForm">
+    <input type="email" id="login_email" placeholder="Email" required><br>
+    <input type="password" id="login_password" placeholder="Password" required><br>
+    <button type="submit">Login</button>
+  </form>
+  <pre id="loginResult"></pre>
+
+<script>
+const api = "http://localhost:3000/api";
+
+document.getElementById("signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const res = await fetch(api + "/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      display_name: document.getElementById("display_name").value,
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value,
+      confirm_password: document.getElementById("confirm_password").value,
+    }),
+  });
+  document.getElementById("signupResult").textContent = JSON.stringify(await res.json(), null, 2);
+});
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const res = await fetch(api + "/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: document.getElementById("login_email").value,
+      password: document.getElementById("login_password").value,
+    }),
+  });
+  document.getElementById("loginResult").textContent = JSON.stringify(await res.json(), null, 2);
+});
+</script>
+</body>
+</html>
