@@ -1,9 +1,12 @@
 <?php
 // Validate a CSUB email address, return true if valid
 function validate_csub_email(string $email): bool {
-    return filter_var($email, FILTER_VALIDATE_EMAIL)
-        && str_ends_with(strtolower($email), '@csub.edu');
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return false;
+    }
+    return substr(strtolower($email), -9) === '@csub.edu';
 }
+
 
 // Validate password strength, must be >= 8 chars, at least one uppercase, one lowercase, one digit.
 function validate_password_strength(string $pass): bool {
