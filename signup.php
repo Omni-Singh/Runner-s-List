@@ -71,6 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="email">CSUB Email</label>
       <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
 
+      <small id="emailHint" class="note" style="display:none;color:#b00020;">
+        CSUB emails only. Use your you@csub.edu address.
+      </small>
+
       <label for="student_id">Student ID (optional)</label>
       <input id="student_id" type="text" name="student_id">
 
@@ -80,11 +84,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <label for="confirm_password">Confirm Password</label>
       <input id="confirm_password" type="password" name="confirm_password" required>
 
-      <button type="submit">Create Account</button>
+      <button id="submitBtn" type="submit">Create Account</button>
     </form>
 
     <p class="note">Already have an account? <a href="login.php">Login</a></p>
   </div>
+  <script>
+    (function () {
+      const email = document.getElementById('email');
+      const hint  = document.getElementById('emailHint');
+      const btn   = document.getElementById('submitBtn');
+
+      function isCSUB(e){ return /@csub\.edu$/i.test((e||'').trim()); }
+
+      function check() {
+        const ok = isCSUB(email.value);
+        hint.style.display = ok ? 'none' : 'block';
+        btn.disabled = !ok;
+
+        if (!ok && email.value.length > 0) {
+          email.classList.add('invalid');
+        } else {
+          email.classList.remove('invalid');
+        }
+      }
+
+      email.addEventListener('input', check);
+      document.addEventListener('DOMContentLoaded', check);
+    })();
+  </script>
 </body>
 </html>
 
