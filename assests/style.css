@@ -28,3 +28,16 @@ button {
 button:hover { filter:brightness(.95); }
 a { color:#0b72ff; text-decoration:none; }
 a:hover { text-decoration:underline; }
+
+/* Style invalid email input */
+input.invalid {
+  border: 2px solid #b00020;   
+  background-color: #ffe6e6;   
+}
+
+/* Style valid email input */
+input.valid {
+  border: 2px solid #2e7d32;   
+  background-color: #e8f5e9;   
+}
+
