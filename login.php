@@ -46,26 +46,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Login – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <div class="container">
     <h1>Login</h1>
 
-    <?php if ($error_message): ?><div class="err"><?=htmlspecialchars($error_message)?></div><?php endif; ?>
-    <?php if ($success_message): ?><div class="note"><?=htmlspecialchars($success_message)?></div><?php endif; ?>
+    <?php if ($error_message): ?>
+      <div class="err"><?= htmlspecialchars($error_message) ?></div>
+    <?php endif; ?>
 
-    <form method="post" action="login.php" novalidate>
+    <?php if ($success_message): ?>
+      <div class="note"><?= htmlspecialchars($success_message) ?></div>
+    <?php endif; ?>
+
+    <form id="loginForm" method="post" action="login.php" novalidate>
       <label for="email">Email (CSUB only)</label>
       <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
 
       <label for="password">Password</label>
-      <input id="password" type="password" name="password" required>
+      <input id="password" type="password" name="password" minlength="8" required>
 
       <button type="submit">Sign in</button>
     </form>
 
     <p class="note">Don’t have an account? <a href="signup.php">Sign up</a></p>
   </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      const emailField = document.getElementById("email");
+      const passwordField = document.getElementById("password");
+      let valid = true;
+
+      if (!emailField.value.endsWith("@csub.edu")) {
+        alert("Please use a CSUB email.");
+        emailField.classList.add("invalid");
+        valid = false;
+      } else {
+        emailField.classList.remove("invalid");
+      }
+
+      if (passwordField.value.length < 8) {
+        alert("Password must be at least 8 characters.");
+        passwordField.classList.add("invalid");
+        valid = false;
+      } else {
+        passwordField.classList.remove("invalid");
+      }
+
+      if (!valid) e.preventDefault();
+    });
+  </script>
 </body>
 </html>
