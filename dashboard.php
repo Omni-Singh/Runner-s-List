@@ -38,7 +38,7 @@ try {
   <meta charset="utf-8">
   <title>Dashboard – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/style.css">
   <style>
     .cards { display:grid; gap:12px; grid-template-columns: 1fr 1fr; margin-top:16px; }
     .card  { background:#fff; border:1px solid #eee; border-radius:10px; padding:14px; text-align:center; }

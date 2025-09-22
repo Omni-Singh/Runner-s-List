@@ -13,6 +13,6 @@ if (ini_get('session.use_cookies')) {
 // Destroy session
 session_destroy();
 
-// Redirect (
+// Redirect 
 header("Location: login.php?msg=" . urlencode("You’ve been logged out."));
 exit;
