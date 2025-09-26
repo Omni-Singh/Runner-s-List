@@ -45,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         } catch (Throwable $e) {
             $error_message = "Unable to create account right now.";
+            // Debug mode: show actual error (REMOVE BEFORE PUSHING)
+            $error_message = "DEBUG: " . $e->getMessage();
         }
     }
 }
@@ -55,11 +57,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Sign Up – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Create Account</h1>
+  <div class="container-narrow">
+    <a href="login.php" class="back-arrow">←</a>
+    <<h1 class="title">Create Account</h1>
 
     <?php if ($error_message): ?><div class="err"><?=htmlspecialchars($error_message)?></div><?php endif; ?>
     <?php if ($success_message): ?><div class="note"><?= $success_message ?></div><?php endif; ?>

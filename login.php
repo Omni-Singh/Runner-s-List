@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div class="container">
+  <div class="container-narrow">
     <h1>Login</h1>
 
     <?php if ($error_message): ?>
