@@ -100,10 +100,6 @@ try {
             <img src="<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
           <?php endif; ?>
           <div class="post-details">
-            <?php if (!empty($post['image_path'])): ?>
-            <img src="<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
-          <?php endif; ?>
-          <div class="post-details">
             <div class="post-title">
               [<?= strtoupper(htmlspecialchars($post['type'])) ?>] <?= htmlspecialchars($post['title']) ?>
             </div>

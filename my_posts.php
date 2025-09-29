@@ -20,7 +20,7 @@ try {
     "SELECT p.*, 
      (SELECT path FROM post_images WHERE post_id = p.id LIMIT 1) as image_path
      FROM posts p
-     WHERE p.user_id = ?
+     WHERE p.user_id = ? AND p.status = 'ACTIVE'
      ORDER BY p.created_at DESC"
   );
   $stmt->execute([$_SESSION['user_id']]);

@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $description = trim($_POST['description'] ?? '');
   $location = trim($_POST['location'] ?? '');
   $type = trim($_POST['type'] ?? '');
-  $lost_date = trim($_POST['lost_date'] ?? '')
+  $lost_date = trim($_POST['lost_date'] ?? '');
 
   // Basic validation
   if ($title === '') $errors['title'] = "Title is required.";
