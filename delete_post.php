@@ -18,7 +18,7 @@ try {
   $pdo = get_pdo_connection();
   
   // Verify ownership
-  $stmt = $pdo->prepare("SELECT id FROM posts WHERE id = ? AND user_id = ? LIMIT 1");
+  $stmt = $pdo->prepare("SELECT id, status FROM posts WHERE id = ? AND user_id = ? LIMIT 1");
   $stmt->execute([$post_id, $_SESSION['user_id']]);
   $post = $stmt->fetch();
   
@@ -44,7 +44,8 @@ try {
   
   // Delete image files 
   foreach ($images as $img) {
-  $filepath = '/home/stu/runnerslist/public_html' . $img['path'];
+  $relative_path = str_replace('/~runnerslist', '', $img['path']);
+  $filepath = '/home/stu/runnerslist/public_html' . $relative_path;
   if (file_exists($filepath)) {
     unlink($filepath);
   }
