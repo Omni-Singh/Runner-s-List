@@ -47,18 +47,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $post_id = $pdo->lastInsertId();
 
       if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/uploads/';
+        $upload_dir = "/uploads/";
         if (!is_dir($upload_dir)) {
           mkdir($upload_dir, 0755, true);
         }
         
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $filename = 'post_' . $post_id . '_' . time() . '.' . $ext;
+        $filename = uniqid() . '_post_' . $post_id . '.' . $ext;
         $filepath = $upload_dir . $filename;
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $filepath)) {
           $stmt = $pdo->prepare("INSERT INTO post_images (post_id, path) VALUES (?, ?)");
-          $stmt->execute([$post_id, '/uploads/' . $filename]);
+          $stmt->execute([$post_id, $filename]);
         }
       }
 

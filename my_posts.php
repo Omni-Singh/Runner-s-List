@@ -67,7 +67,7 @@ try {
       <?php foreach ($active_posts as $post): ?>
         <div class="post-card">
           <?php if (!empty($post['image_path'])): ?>
-            <img src="<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
+            <img src="uploads/<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
           <?php endif; ?>
           <div class="post-details">
             <div class="post-title">
@@ -108,7 +108,7 @@ try {
       <?php foreach ($resolved_posts as $post): ?>
         <div class="post-card" style="opacity: 0.85;">
           <?php if (!empty($post['image_path'])): ?>
-            <img src="<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
+            <img src="uploads/<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
           <?php endif; ?>
           <div class="post-details">
             <div class="post-title">
