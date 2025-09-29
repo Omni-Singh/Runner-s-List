@@ -67,7 +67,7 @@ try {
       <?php foreach ($active_posts as $post): ?>
         <div class="post-card">
           <?php if (!empty($post['image_path'])): ?>
-            <img src="uploads/<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
+            <img src="<?= htmlspecialchars($img['path']) ?>" alt="Post image">
           <?php endif; ?>
           <div class="post-details">
             <div class="post-title">
