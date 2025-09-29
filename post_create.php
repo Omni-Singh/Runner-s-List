@@ -47,20 +47,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $post_id = $pdo->lastInsertId();
 
       if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = "/uploads/";
+        // Absolute filesystem path
+        $upload_dir = '/home/stu/runnerslist/public_html/uploads/';
+        // Web-accessible path 
+        $web_path = '/runnerslist/public_html/uploads/';
+    
         if (!is_dir($upload_dir)) {
           mkdir($upload_dir, 0755, true);
         }
-        
+    
         $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
         $filename = uniqid() . '_post_' . $post_id . '.' . $ext;
-        $filepath = $upload_dir . $filename;
-        
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $filepath)) {
+  
+        $absolute_path = $upload_dir . $filename;
+    
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $absolute_path)) {
+          $db_path = $web_path . $filename;
           $stmt = $pdo->prepare("INSERT INTO post_images (post_id, path) VALUES (?, ?)");
-          $stmt->execute([$post_id, $filename]);
+          $stmt->execute([$post_id, $db_path]);
+          }
         }
-      }
 
       header("Location: dashboard.php?msg=" . urlencode("Post created successfully!"));
       exit;
