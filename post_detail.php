@@ -68,7 +68,7 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
     <?php if (!empty($images)): ?>
       <div class="post-detail-images">
         <?php foreach ($images as $img): ?>
-          <img src="<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
+          <img src="<?= htmlspecialchars($img['path']) ?>" alt="Post image">
         <?php endforeach; ?>
       </div>
     <?php endif; ?>
