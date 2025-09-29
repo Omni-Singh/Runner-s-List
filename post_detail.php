@@ -48,7 +48,7 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
   <meta charset="utf-8">
   <title><?= htmlspecialchars($post['title']) ?> – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="post-detail-container">
@@ -68,7 +68,7 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
     <?php if (!empty($images)): ?>
       <div class="post-detail-images">
         <?php foreach ($images as $img): ?>
-          <img src="<?= htmlspecialchars($img['path']) ?>" alt="Post image">
+          <img src="/~runnerslist<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
         <?php endforeach; ?>
       </div>
     <?php endif; ?>

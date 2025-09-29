@@ -47,7 +47,7 @@ try {
   <meta charset="utf-8">
   <title>My Posts – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="my-posts-container">
@@ -67,7 +67,7 @@ try {
       <?php foreach ($active_posts as $post): ?>
         <div class="post-card">
           <?php if (!empty($post['image_path'])): ?>
-            <img src="<?= htmlspecialchars($img['path']) ?>" alt="Post image">
+            <img src="/~runnerslist<?= htmlspecialchars($post['image_path']) ?>" alt="Post image">
           <?php endif; ?>
           <div class="post-details">
             <div class="post-title">

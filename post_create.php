@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Absolute filesystem path
         $upload_dir = '/home/stu/runnerslist/public_html/uploads/';
         // Web-accessible path 
-        $web_path = '/runnerslist/public_html/uploads/';
+        $web_path = '/~runnerslist/uploads/';
     
         if (!is_dir($upload_dir)) {
           mkdir($upload_dir, 0755, true);
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Create Post – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="create-post-container">

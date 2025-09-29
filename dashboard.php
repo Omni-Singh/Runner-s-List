@@ -36,7 +36,7 @@ try {
    <meta charset="utf-8">
   <title>Dashboard – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
 <main> 
