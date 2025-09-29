@@ -27,6 +27,12 @@ try {
     exit;
   }
   
+  // Block deletion if post is RESOLVED
+  if ($post['status'] === 'RESOLVED') {
+    header("Location: my_posts.php?msg=" . urlencode("Cannot delete resolved posts."));
+    exit;
+  }
+  
   // Get images to delete files
   $stmt = $pdo->prepare("SELECT path FROM post_images WHERE post_id = ?");
   $stmt->execute([$post_id]);
@@ -38,11 +44,11 @@ try {
   
   // Delete image files 
   foreach ($images as $img) {
-    $filepath = __DIR__ . $img['path'];
-    if (file_exists($filepath)) {
-      unlink($filepath);
-    }
+  $filepath = '/home/stu/runnerslist/public_html' . $img['path'];
+  if (file_exists($filepath)) {
+    unlink($filepath);
   }
+}
   
   header("Location: my_posts.php?msg=" . urlencode("Post deleted successfully."));
   exit;
