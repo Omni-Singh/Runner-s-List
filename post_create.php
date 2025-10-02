@@ -14,17 +14,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $title = trim($_POST['title'] ?? '');
   $description = trim($_POST['description'] ?? '');
   $location = trim($_POST['location'] ?? '');
-  $category = trim($_POST['category'] ?? '');
-  $tags = trim($_POST['tags'] ?? '');
+  $type = trim($_POST['type'] ?? '');
+  $lost_date = trim($_POST['lost_date'] ?? '');
 
   // Basic validation
   if ($title === '') $errors['title'] = "Title is required.";
   if ($description === '') $errors['description'] = "Description is required.";
   if ($location === '') $errors['location'] = "Location is required.";
+  if ($type === '' || !in_array($type, ['lost', 'found'])) {
+    $errors['type'] = "Please select Lost or Found.";
+  }
 
   if (empty($errors)) {
-    // TODO: insert into database here
-    $success = "Post created successfully (mock).";
+    try {
+      $pdo = get_pdo_connection();
+      
+      // Insert post
+      $stmt = $pdo->prepare(
+        "INSERT INTO posts (user_id, type, title, description, location, lost_date, status) 
+         VALUES (?, ?, ?, ?, ?, ?, 'ACTIVE')"
+      );
+
+      $stmt->execute([
+        $_SESSION['user_id'],
+        $type,
+        $title,
+        $description,
+        $location,
+        $lost_date ?: null
+      ]);
+
+      $post_id = $pdo->lastInsertId();
+
+      if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        // Absolute filesystem path
+        $upload_dir = '/home/stu/runnerslist/public_html/uploads/';
+        // Web-accessible path 
+        $web_path = '/~runnerslist/uploads/';
+    
+        if (!is_dir($upload_dir)) {
+          mkdir($upload_dir, 0755, true);
+        }
+    
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $filename = uniqid() . '_post_' . $post_id . '.' . $ext;
+  
+        $absolute_path = $upload_dir . $filename;
+    
+        if (move_uploaded_file($_FILES['image']['tmp_name'], $absolute_path)) {
+          $db_path = $web_path . $filename;
+          $stmt = $pdo->prepare("INSERT INTO post_images (post_id, path) VALUES (?, ?)");
+          $stmt->execute([$post_id, $db_path]);
+          }
+        }
+
+      header("Location: dashboard.php?msg=" . urlencode("Post created successfully!"));
+      exit;
+
+      } catch (Throwable $e) {
+      $errors['general'] = "Unable to create post. Please try again.";
+    }
   }
 }
 ?>
@@ -34,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Create Post – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="create-post-container">
@@ -46,6 +95,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php endif; ?>
 
     <form class="create-post-form" method="POST" enctype="multipart/form-data">
+      <div>
+        <label for="type">Type *</label>
+        <select name="type" id="type" required>
+          <option value="">Select...</option>
+          <option value="lost" <?= ($_POST['type'] ?? '') === 'lost' ? 'selected' : '' ?>>Lost</option>
+          <option value="found" <?= ($_POST['type'] ?? '') === 'found' ? 'selected' : '' ?>>Found</option>
+        </select>
+        <?php if (isset($errors['type'])): ?><div class="error"><?= $errors['type'] ?></div><?php endif; ?>
+      </div>
+    
       <div>
         <label for="title">Title *</label>
         <input type="text" name="title" id="title" value="<?= htmlspecialchars($_POST['title'] ?? '') ?>" required autofocus>
@@ -65,22 +124,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
 
       <div>
+        <label for="lost_date">Date (optional)</label>
+        <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($_POST['lost_date'] ?? '') ?>">
+      </div>
+
+      <div>
         <label for="image">Image (optional)</label>
         <input type="file" name="image" id="image">
-      </div>
-
-      <div>
-        <label for="category">Category (optional)</label>
-        <select name="category" id="category">
-          <option value="">Select...</option>
-          <option value="Lost" <?= ($_POST['category'] ?? '') === 'Lost' ? 'selected' : '' ?>>Lost</option>
-          <option value="Found" <?= ($_POST['category'] ?? '') === 'Found' ? 'selected' : '' ?>>Found</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="tags">Tags (optional)</label>
-        <input type="text" name="tags" id="tags" placeholder="e.g. keys, backpack" value="<?= htmlspecialchars($_POST['tags'] ?? '') ?>">
       </div>
 
       <button type="submit">Create Post</button>

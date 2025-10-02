@@ -549,3 +549,101 @@ footer {
 .create-post-form button:focus {
   background: var(--brand-hover);
 }
+
+/* Post Detail Page Styles */
+
+.post-detail-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.post-detail-header {
+  margin-bottom: 1.5rem;
+}
+
+.post-type-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--brand);
+  color: white;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.post-detail-title {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0.5rem 0;
+}
+
+.post-detail-meta {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.post-detail-images {
+  margin: 1.5rem 0;
+  display: grid;
+  gap: 10px;
+}
+
+.post-detail-images img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.post-detail-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  border: 1px solid #eee;
+}
+
+.post-detail-section h3 {
+  margin-top: 0;
+  color: var(--brand);
+  font-size: 1.1rem;
+}
+
+.post-detail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.post-detail-actions a, 
+.post-detail-actions button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--brand);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: var(--brand-hover);
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: var(--brand);
+  border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+  background: #e4ebf6;
+}
