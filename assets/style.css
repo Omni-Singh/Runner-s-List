@@ -549,3 +549,75 @@ footer {
 .create-post-form button:focus {
   background: var(--brand-hover);
 }
+
+.landing-header {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.logo-container {
+  margin-bottom: 10px;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+}
+
+.actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.actions .btn {
+  display: inline-block;
+  background-color: #003594;
+  color: white;
+  padding: 10px 24px;
+  margin: 1px 0;   
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.actions .btn:hover {
+  background-color: #002B8C;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.9em;
+}
+  
+/*  About & Contact Pages  */
+
+.standard-page {
+  background: #f8fafc;
+  font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-header {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.about-container,
+.contact-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  line-height: 1.6;
+  color: #333;
+}
+
+footer {
+  text-align: center;
+  margin-top: auto;
+  font-size: 0.9em;
+  padding: 1rem;
+}
