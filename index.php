@@ -1,10 +1,8 @@
 <?php
 session_start();
 
-// Detect environment: local vs Artemis
-$basePath = (strpos($_SERVER['HTTP_HOST'], 'artemis.cs.csubak.edu') !== false)
-  ? '/~runnerslist'
-  : '';
+
+$basePath = '/~!runnerslist';
 
 // If user already logged in, redirect to dashboard
 if (!empty($_SESSION['user_id'])) {
@@ -18,28 +16,27 @@ if (!empty($_SESSION['user_id'])) {
   <meta charset="utf-8">
   <title>Welcome – CSUB Lost & Found</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body class="landing-body">
   <header class="landing-header">
     <div class="logo-container">
-      <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo" class="logo">
+      <img src="assets/csub_logo.png" alt="CSUB Logo" class="logo">
     </div>
-    <h1>CSUB Lost &amp; Found</h1>
+    <h1>RunnersList Lost &amp; Found</h1>
   </header>
 
   <main>
     <p class="tagline">Find lost items, report found ones, and reconnect with their owners.</p>
     <div class="actions">
-      <a href="<?= $basePath ?>/signup.php" class="btn">Sign Up</a>
-      <a href="<?= $basePath ?>/login.php" class="btn">Log In</a>
+      <a href="/~runnerslist/signup.php" class="btn">Sign Up</a>
+      <a href="/~runnerslist/login.php" class="btn">Log In</a>
     </div>
   </main>
 
   <footer>
-    <!-- TODO: Replace with real pages later -->
-      <a href="<?= $basePath ?>/about.php">About</a> •
-      <a href="<?= $basePath ?>/contact.php">Contact</a> 
+      <a href="/~runnerslist/about.php">About</a> •
+      <a href="/~runnerslist/contact.php">Contact</a>
   </footer>
 </body>
 </html>

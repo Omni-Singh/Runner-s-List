@@ -18,7 +18,7 @@ $name = $_SESSION['name'] ?? 'User';
   <meta charset="utf-8">
   <title>My Posts – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="my-posts-container">

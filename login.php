@@ -1,6 +1,6 @@
 <?php
-require_once("config.php");
-require_once("includes/validators.php");
+require_once __DIR__ . "/config.php";
+require_once __DIR__ . "/includes/validators.php";
 
 $error_message = '';
 $success_message = $_GET['msg'] ?? '';
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Login – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
 </head>
 <body>
   <div class="container-narrow">
