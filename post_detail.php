@@ -1,6 +1,8 @@
 <?php
 session_start();
-require_once "config.php";
+require_once('includes/config.php');
+require_once('includes/functions.php');
+require_once('includes/validators.php');
 
 if (empty($_SESSION['user_id'])) {
   header("Location: login.php");
@@ -48,7 +50,7 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
   <meta charset="utf-8">
   <title><?= htmlspecialchars($post['title']) ?> – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
+  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
 </head>
 <body>
   <div class="post-detail-container">
