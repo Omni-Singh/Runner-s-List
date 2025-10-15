@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once "config.php";
+require_once('includes/config.php');
+require_once('includes/functions.php');
 
 if (empty($_SESSION['user_id'])) {
   header("Location: login.php");
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Create Post – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
+  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
 </head>
 <body>
   <div class="create-post-container">
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="success"><?= htmlspecialchars($success) ?></div>
     <?php endif; ?>
 
-    <form class="create-post-form" method="POST" enctype="multipart/form-data">
+    <form class="create-post-form" method="POST" action="post_create.php" enctype="multipart/form-data">
       <div>
         <label for="type">Type *</label>
         <select name="type" id="type" required>

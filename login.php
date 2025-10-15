@@ -1,6 +1,7 @@
 <?php
-require_once("config.php");
+require_once('includes/config.php');
 require_once("includes/validators.php");
+require_once('includes/functions.php');
 
 $error_message = '';
 $success_message = $_GET['msg'] ?? '';
@@ -46,31 +47,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Login – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
+  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
 </head>
-<body>
-  <div class="container-narrow">
-    <h1>Login</h1>
+<body class="landing-body">
+  <header>
+    <div class="logo-container">
+      <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo" class="logo">
+    </div>
+  </header>
 
-    <?php if ($error_message): ?>
-      <div class="err"><?= htmlspecialchars($error_message) ?></div>
-    <?php endif; ?>
+  <div class="content-card">
+    <main>
+      <a href="<?= $basePath ?>/index.php" class="back-arrow">← Back to Home</a>
+      <h1>Login</h1>
 
-    <?php if ($success_message): ?>
-      <div class="note"><?= htmlspecialchars($success_message) ?></div>
-    <?php endif; ?>
+      <?php if ($error_message): ?><div class="err"><?= htmlspecialchars($error_message) ?></div><?php endif; ?>
+      <?php if ($success_message): ?><div class="note"><?= htmlspecialchars($success_message) ?></div><?php endif; ?>
 
-    <form id="loginForm" method="post" action="login.php" novalidate>
-      <label for="email">Email (CSUB only)</label>
-      <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
+      <div class="form-container">
+        <form id="loginForm" method="post" action="login.php" novalidate>
+            <label for="email">Email (CSUB only)</label>
+            <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
 
-      <label for="password">Password</label>
-      <input id="password" type="password" name="password" minlength="8" required>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" minlength="8" required>
 
-      <button type="submit">Sign in</button>
-    </form>
+            <button type="submit" class="btn">Sign in</button>
+        </form>
+      </div>
 
-    <p class="note">Don’t have an account? <a href="signup.php">Sign up</a></p>
+      <p class="form-footer-link">Don’t have an account? <a href="<?= $basePath ?>/signup.php">Sign up</a></p>
+    </main>
   </div>
 
   <script>

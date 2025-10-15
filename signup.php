@@ -1,6 +1,7 @@
 <?php
-require_once("config.php");
+require_once('includes/config.php');
 require_once("includes/validators.php");
+require_once('includes/functions.php');
 
 $error_message = '';
 $success_message = '';
@@ -57,16 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="utf-8">
   <title>Sign Up – Runnerslist</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/~runnerslist/assets/style.css">
+  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
 </head>
-<body>
-  <div class="container-narrow">
-    <a href="login.php" class="back-arrow">←</a>
-    <<h1 class="title">Create Account</h1>
+<body class="landing-body">
+  <header>
+   <div class="logo-container">
+      <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo" class="logo">
+    </div>
+  </header>
+
+<div class="content-card">
+    <main>
+      <a href="<?= $basePath ?>/index.php" class="back-arrow">← Back to Home</a>
+      <h1 style="text-align: center;">Create Account</h1>
 
     <?php if ($error_message): ?><div class="err"><?=htmlspecialchars($error_message)?></div><?php endif; ?>
     <?php if ($success_message): ?><div class="note"><?= $success_message ?></div><?php endif; ?>
 
+    <div class="form-container">
     <form method="post" action="signup.php" novalidate>
       <label for="full_name">Full Name</label>
       <input id="full_name" type="text" name="full_name" required>
@@ -83,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       <label for="password">Password</label>
       <input id="password" type="password" name="password" required>
-      <small id="passwordHint" class="note" style="color:#555;">At least 8 chars, uppercase, lowercase, number.</small>
+      <small id="passwordHint" class="note" style="color:#555;">At least 8 character, uppercase, lowercase, number.</small>
 
       <label for="confirm_password">Confirm Password</label>
       <input id="confirm_password" type="password" name="confirm_password" required>
@@ -91,7 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <button id="submitBtn" type="submit">Create Account</button>
     </form>
 
-    <p class="note">Already have an account? <a href="login.php">Login</a></p>
+    <p class="form-footer-link">
+       Already have an account? <a href="<?= $basePath ?>/login.php">Login</a>
+    </p>
   </div>
   <script>
     (function () {
