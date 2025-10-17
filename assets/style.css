@@ -1,784 +1,800 @@
-:root { --brand: #003594;  /* CSUB primary blue */
-        --brand-hover: #002B8C;  /* Darker blue for hover/focus */
-        --brand-accent: #FFC72C; /* Optional gold accent */ 
-      }   
+/* --- Universal Site Styles --- */
+
+/* --- Base Setup & Fonts --- */
 body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f4f4f9;
-  color: #333;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+    font-family: 'Poppins', sans-serif; /* New font for the redesigned site */
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
 }
 
-.container {
-  max-width: 600px;
-  width: 100%;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.1);
-}
-
-.container-narrow {
-  max-width: 400px;
-  width: 100%;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.1);
-
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-h1 { text-align:center; color:var(--brand); }
-
-.err {
-  color: #b00020;
-  font-weight: bold;
-  margin: 12px 0;
-  text-align: center;
-  border: 1px solid #b00020;
-  background: #ffe6e6;
-  padding: 8px;
-  border-radius: 5px;
-}
-
-.note {
-  text-align: center;
-  margin: 12px 0;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-label {
-  font-weight: bold;
-}
-
-input[type=email],
-input[type=password],
-input[type=text] {
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 100%;
-}
-
-button {
-  padding:10px 15px; font-size:1.1rem; background:var(--brand);
-  color:#fff; border:none; border-radius:5px; cursor:pointer;
-}
-button:hover { 
-  background: var(--brand-hover); /* darker CSUB blue */
-  filter: none; 
-}
-a { color: var(--brand); text-decoration:none; }
-a:hover { text-decoration:underline; }
-
-/* Style valid input */
-input.valid {
-  border: 2px solid #2e7d32;   
-  background-color: #e8f5e9;   
-}
-
-
-/*  Community Feed Styles */
-
-.community-feed-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.community-feed-container h1 {
-  text-align: center;
-  color: var(--brand);
-  margin-bottom: 1rem;
-}
-
-.search-bar {
-  margin-bottom: 1rem;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.search-bar input:focus,
-.filters select:focus {
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 1rem;
-}
-
-.filters select {
-  flex: 1;
-  padding: 6px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.post-card {
-  display: flex;
-  gap: 12px;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background: #fff;
-  padding: 12px;
-  margin-bottom: 12px;
-  transition: box-shadow 0.2s ease;
-  cursor: pointer; /* optional UX improvement */
-}
-
-.post-card:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.post-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.post-details {
-  flex: 1;
-}
-
-.post-title {
-  font-weight: bold;
-  margin-bottom: 4px;
-  color: var(--brand);
-}
-
-.post-meta {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.post-actions a {
-  display: inline-block;
-  margin-right: 8px;
-  font-size: 0.85rem;
-  color: var(--brand);
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.post-actions a:hover,
-.post-actions a:focus {
-  color: var(--brand-hover);
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-.empty-state {
-  text-align: center;
-  margin-top: 2rem;
-  color: #777;
-  font-style: italic;
-}
-
-@media (max-width: 375px) {
-  .post-card {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .post-card img {
-    width: 100%;
-    height: auto;
-  }
-}
-
-/*   Inbox / Messages Page */ 
-
-.message-card {
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background: #fff;
-  padding: 12px;
-  margin-bottom: 12px;
-  transition: box-shadow 0.2s ease;
-}
-
-.message-card:hover {
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-.message-title {
-  font-weight: bold;
-  color: var(--brand);
-  margin-bottom: 4px;
-}
-
-.message-text {
-  margin-bottom: 6px;
-  color: #333;
-}
-
-.message-meta {
-  font-size: 0.8rem;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.message-actions a {
-  display: inline-block;
-  font-size: 0.85rem;
-  color: var(--brand);
-  font-weight: 500;
-  text-decoration: none;
-}
-
-.message-actions a:hover,
-.message-actions a:focus {
-  color: var(--brand-hover);
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-.placeholder-text {
-  margin-top: 1rem;
-  text-align: center;
-  color: #555;
-  font-style: italic;
-}
-
-/* Dashboard Styles */
-
-.cards {
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 16px;
-  width: 100%;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 14px;
-  text-align: center;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.card .stat-value {
-  font-size: 1.6rem;
-  margin-top: 6px;
-}
-
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.actions a {
-  display: block;
-  text-align: center;
-  padding: 10px;
-  border-radius: 8px;
-  background: #f1f5f9;
-  color: var(--brand);
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.2s ease, outline 0.2s ease;
-}
-
-.actions a:hover,
-.actions a:focus {
-  background: #e4ebf6;
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-@media (max-width: 375px) {
-  .cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-/*  Landing Page Styles */
-
+/* --- Centering Container for Login/About/Contact Pages --- */
 .landing-body {
-  background: #f8fafc;
-  font-family: sans-serif;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-header {
-  text-align: center;
-  padding: 1.5rem 1rem;
-}
-
-header h1 {
-  font-size: 2rem;
-  color: #333;
-}
-
-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 1rem;
-}
-
-.tagline {
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: #555;
-}
-
-.actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.actions a {
-  display: inline-block;
-  padding: 12px 24px;
-  border-radius: 8px;
-  background: var(--brand);
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  min-width: 120px;
-  text-align: center;
-  transition: background 0.2s;
-}
-
-.actions a:hover,
-.actions a:focus {
-  background: var(--brand-hover);
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-footer {
-  text-align: center;
-  font-size: 0.85rem;
-  padding: 1rem;
-  color: #777;
-}
-
-@media (max-width: 375px) {
-  header h1 {
-    font-size: 1.6rem;
-  }
-  .tagline {
-    font-size: 1rem;
-  }
-  .actions {
-    flex-direction: column;
-    width: 100%;
-  }
-  .actions a {
-    width: 100%;
-  }
-}
-/*  My Posts Page Styles */
-
-.my-posts-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.post-card {
-  display: flex;
-  gap: 12px;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background: #fff;
-  padding: 12px;
-  margin-bottom: 12px;
-}
-
-.post-card img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.post-details {
-  flex: 1;
-}
-
-.post-title {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.post-meta {
-  font-size: 0.85rem;
-  color: #666;
-  margin-bottom: 6px;
-}
-
-.post-actions a {
-  display: inline-block;
-  margin-right: 8px;
-  font-size: 0.85rem;
-  color: var(--brand);
-  text-decoration: none;
-}
-
-.post-actions a:hover,
-.post-actions a:focus {
-  color: var(--brand-hover);
-  outline: 2px solid var(--brand);
-  outline-offset: 2px;
-}
-
-@media (max-width: 375px) {
-  .post-card {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-  }
-  .post-card img {
-    width: 100%;
-    height: auto;
-  }
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
 }
 
-/* Create Post Page Styles */
-
-.create-post-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.create-post-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.create-post-form label {
-  font-weight: bold;
-  margin-bottom: 4px;
-}
-
-.create-post-form input,
-.create-post-form textarea,
-.create-post-form select {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  width: 100%;
-}
-
-.create-post-form .error {
-  color: red;
-  font-size: 0.85rem;
-}
-
-.create-post-form .success {
-  color: green;
-  margin-bottom: 1rem;
-}
-
-.create-post-form button {
-  padding: 12px;
-  background: var(--brand);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.create-post-form button:hover,
-.create-post-form button:focus {
-  background: var(--brand-hover);
-}
-
-/* Post Detail Page Styles */
-
-.post-detail-container {
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 1rem;
-}
-
-.post-detail-header {
-  margin-bottom: 1.5rem;
-}
-
-.post-type-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  background: var(--brand);
-  color: white;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.post-detail-title {
-  font-size: 1.8rem;
-  color: #333;
-  margin: 0.5rem 0;
-}
-
-.post-detail-meta {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.post-detail-images {
-  margin: 1.5rem 0;
-  display: grid;
-  gap: 10px;
-}
-
-.post-detail-images img {
-  width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.post-detail-section {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  border: 1px solid #eee;
-}
-
-.post-detail-section h3 {
-  margin-top: 0;
-  color: var(--brand);
-  font-size: 1.1rem;
-}
-
-.post-detail-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 1.5rem;
-}
-
-.post-detail-actions a, 
-.post-detail-actions button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: var(--brand);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.btn-primary:hover {
-  background: var(--brand-hover);
-}
-
-.btn-secondary {
-  background: #f1f5f9;
-  color: var(--brand);
-  border: 1px solid #ddd;
-}
-
-.btn-secondary:hover {
-  background: #e4ebf6;
-}
-
-.logo {
-  width: 200px;
-  height: auto;
-}
-
-/* Card container for content pages */
-.content-card {
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem 2.5rem;
-  margin-top: 1rem; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  max-width: 750px;
-  text-align: left;
-}
-
-.content-card h2 {
-  text-align: center;
-  margin-top: 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 1rem; 
-}
-
-.content-card p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-}
-
-.content-card hr {
+/* --- Reusable Button Styles --- */
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
     border: none;
-    border-top: 1px solid #eee;
-    margin: 1.5rem 0; 
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s, background-color 0.2s;
+    background-color: #003366; /* CSUB Blue */
+    color: white;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    background-color: #002244; /* Darker Blue */
 }
 
-.content-card ol {
-    padding-left: 0;
-    list-style: none;
+/* --- Landing Page Specific Buttons --- */
+.btn-primary { 
+    background-color: #FFC72C; /* CSUB Gold */
+    color: #003366; 
 }
-
-.content-card li {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem; 
-    line-height: 1.6;
-    font-size: 1.1rem;
+.btn-primary:hover {
+    background-color: #e6b327;
 }
-
-.content-card li::before {
-    content: counter(list-item) ".";
-    counter-increment: list-item;
-    font-weight: bold;
-    font-size: 1.1rem;
-    margin-right: 0.75rem;
+.btn-secondary { 
+    background-color: transparent; 
+    border: 2px solid white; 
+    color: white; 
+}
+.btn-secondary:hover { 
+    background-color: white; 
     color: #003366; 
 }
 
-.card-footer {
-    text-align: center;
-    margin-top: 1.5rem; 
-    padding-top: 1rem; 
-    border-top: 1px solid #eee;
-}
 
-.contact-email {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin: 2rem 0;
-}
+/* === LANDING PAGE STYLES === */
 
-.contact-email a {
-    color: #003366; /* CSUB Blue */
+.landing-header {
+    background-color: #003366;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.landing-header .logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white;
     text-decoration: none;
-    padding: 10px 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
 }
-
-.contact-email a:hover {
-    background-color: #f5f5f5;
+.landing-header .logo img {
+    height: 40px;
+    width: auto;
 }
-
-/* --- MORE COMPACT Fixes for Signup & Login Page Layout --- */
-
-
-.content-card h1 {
-    font-size: 1.75rem; 
+.main-nav a {
+    color: #f8f9fa;
+    text-decoration: none;
+    margin-left: 2rem;
+    font-weight: 600;
+    padding-bottom: 5px;
+    position: relative;
+}
+.main-nav a.active::after, .main-nav a:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #FFC72C;
+}
+.hero {
+    background: #003366;
+    color: white;
+    padding: 4rem 2rem;
+}
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+.hero-text { max-width: 50%; }
+.hero h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
     margin-bottom: 1rem;
+    line-height: 1.2;
+}
+.hero p {
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+}
+.hero-actions { display: flex; gap: 1rem; }
+.hero-graphic {
+    width: 45%;
+    height: 350px;
+    background-image: url('https://images.unsplash.com/photo-1578351122040-70a25f54d193?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+}
+.how-it-works {
+    padding: 4rem 2rem;
+    background-color: white;
+    text-align: center;
+}
+.how-it-works h2 { font-size: 2rem; font-weight: 700; margin-bottom: 3rem; }
+.steps-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+.step { flex: 1; }
+.step-icon { margin-bottom: 1rem; color: #003366; }
+.step h3 { font-size: 1.2rem; }
+.recent-items {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.recent-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+.recent-items-header h2 { margin: 0; font-size: 2rem; }
+.recent-items-header a { font-weight: 600; text-decoration: none; color: #003366; }
+.items-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.item-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+.item-card:hover { transform: translateY(-5px); }
+.item-image { height: 150px; background-size: cover; background-position: center; }
+.item-info { padding: 1rem; }
+.item-info h3 { margin: 0 0 0.5rem 0; font-size: 1.1rem; }
+.item-info p { margin: 0; color: #666; font-size: 0.9rem; }
+.landing-footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.9rem;
+    color: #666;
+    background-color: #e9ecef;
 }
 
+
+/* === STYLES FOR LOGIN, SIGNUP, ABOUT, etc. === */
+
+.content-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 2rem 2.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 450px; /* Standard width for forms */
+  text-align: left;
+}
+.content-card h1, .content-card h2 { text-align: center; margin-top: 0; }
 .form-container label {
-    margin-bottom: 5px; 
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
 }
-
 .form-container input[type="text"],
 .form-container input[type="email"],
 .form-container input[type="password"] {
-  margin-bottom: 0.6rem; 
-  padding: 10px; 
-}
-
-.form-container small.note {
-    margin-top: -0.4rem; 
-    display: block;
+    width: 100%;
+    padding: 10px;
     margin-bottom: 0.6rem;
-    font-size: 0.8rem; 
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box !important; /* Forces correct sizing */
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
 }
+.form-container .btn { width: 100%; margin-top: 1rem; }
+.form-footer-link { text-align: center; margin-top: 1rem; }
 
-.form-container .btn {
-    margin-top: 0.5rem; 
-}
+/* Input Validation Styles */
+.form-container input.valid { border-color: #28a745; }
+.form-container input.invalid { border-color: #dc3545; }
 
-.form-footer-link {
-    text-align: center;
-    margin-top: 1rem; 
-}
-
-/* 2. Style for the back arrow */
-
+/* Back Arrow Style */
 .back-arrow {
-  display: inline-block; /* The correct display property */
+  display: inline-block;
   margin-bottom: 1.5rem;
   font-weight: bold;
   text-decoration: none;
   color: #555;
   font-size: 0.9rem;
-  cursor: pointer;
+}
+.back-arrow:hover { color: #003366; }
+
+/* Error Messages */
+.err {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    margin-bottom: 1rem;
 }
 
-.back-arrow:hover {
-  color: #003366; /* CSUB Blue */
+
+/* === RESPONSIVE STYLES === */
+@media (max-width: 900px) {
+    .main-nav { display: none; }
+    .hero-content { flex-direction: column; text-align: center; }
+    .hero-text { max-width: 100%; margin-bottom: 2rem;}
+    .hero-graphic { width: 90%; }
+    .hero-actions { justify-content: center; }
+    .steps-container { flex-direction: column; }
+}
+/* --- CONTAINER FOR LOGIN/SIGNUP/ABOUT PAGES --- */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* This centers the card vertically */
+    min-height: calc(100vh - 80px); /* Adjusts height to fill screen below header */
+    padding: 2rem;
+    box-sizing: border-box;
+}
+/* --- NEW STYLES FOR DASHBOARD PAGE --- */
+
+.dashboard-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 600px; /* Wider card for dashboard */
+    text-align: center;
 }
 
-/* --- Fix for Input Box Sizing & Validation Styles --- */
+.welcome-message h1 {
+    margin-top: 0;
+}
+.welcome-message p {
+    margin-bottom: 2rem;
+    color: #555;
+}
 
+.dashboard-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    flex: 1;
+}
+
+.stat-card h2 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    color: #555;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #003366;
+}
+
+.dashboard-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.dashboard-actions .btn {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding doesn't break width */
+    background-color: #f1f5f9;
+    color: #003366;
+    font-weight: 600;
+}
+.dashboard-actions .btn:hover {
+    background-color: #e2e8f0;
+}
+
+.dashboard-actions .btn-primary {
+    background-color: #003366;
+    color: white;
+}
+.dashboard-actions .btn-primary:hover {
+    background-color: #002244;
+}
+
+.dashboard-actions .btn-logout {
+    margin-top: 1rem;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+.dashboard-actions .btn-logout:hover {
+    background-color: #f5c6cb;
+}
+/* --- NEW STYLES FOR ACCOUNT SETTINGS PAGE --- */
+
+.account-container {
+    width: 100%;
+    max-width: 700px;
+}
+
+.settings-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 1.5rem;
+}
+
+.settings-card h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings-card .form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Specific styles for the "danger zone" card */
+.danger-zone {
+    border: 2px solid #dc3545;
+    background-color: #f8d7da;
+}
+
+.danger-zone h2 {
+    color: #721c24;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Success message style */
+.ok {
+    background: #e6ffef;
+    border: 1px solid #2ecc71;
+    color: #205723;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
+/* --- NEW STYLES FOR DASHBOARD REDESIGN --- */
+
+.dashboard-body {
+    background-color: #f4f7f6;
+    padding-top: 80px; /* Space for the fixed header */
+    padding-bottom: 80px; /* Space for the fixed mobile nav */
+}
+
+.dashboard-header {
+    background-color: white;
+    padding: 0 2rem;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.dashboard-header .logo { display: flex; align-items: center; }
+.dashboard-header .logo img { height: 40px; }
+
+.search-container {
+    flex-grow: 1;
+}
+.search-container input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 1rem;
+}
+
+.profile-icon a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+}
+
+.feed-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.post-card {
+    background-color: white;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    overflow: hidden;
+}
+
+.post-image {
+    width: 200px;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.post-content {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+.post-content h3 { margin: 0 0 0.5rem 0; }
+.post-content .post-meta { font-size: 0.9rem; color: #666; margin-bottom: 1rem; }
+.post-content .post-actions { margin-top: auto; display: flex; gap: 10px; }
+.post-content .btn-secondary { background-color: #f1f5f9; color: #003366; }
+
+.mobile-nav {
+    display: none; /* Hidden on desktop */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 65px;
+    background-color: white;
+    border-top: 1px solid #e0e0e0;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 1000;
+}
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #888;
+}
+.nav-item.active { color: #003366; }
+.nav-item span { font-size: 0.75rem; }
+
+
+/* --- Responsive Styles for Dashboard --- */
+@media (max-width: 768px) {
+    .dashboard-header .search-container, .dashboard-header .profile-icon span {
+        display: none; /* Hide search and text on mobile header */
+    }
+    .dashboard-header { justify-content: space-between; }
+    .mobile-nav { display: flex; } /* Show mobile nav */
+
+    .post-card { flex-direction: column; }
+    .post-image { width: 100%; height: 200px; }
+}
+/* --- NEW STYLES FOR HEADER ICONS --- */
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto; /* Pushes the icons to the far right */
+}
+
+.notification-icon {
+    position: relative;
+}
+
+.notification-icon a {
+    color: #333;
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: #dc3545; /* Red */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+/* --- UPDATED STYLES FOR DASHBOARD REDESIGN --- */
+
+.dashboard-body {
+    background-color: #f4f7f6;
+    padding-top: 80px; /* Space for the fixed header */
+    padding-bottom: 80px; /* Space for the fixed mobile nav */
+}
+
+/* This is the fix for the header color */
+.dashboard-header {
+    background-color: #003366; /* CSUB Blue */
+    padding: 0 2rem;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    border-bottom: 1px solid #002244; /* Darker border */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.dashboard-header .logo span { color: white; }
+.dashboard-header .logo img { height: 40px; }
+
+.search-container {
+    flex-grow: 1;
+}
+.search-container input {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    border: 1px solid #0055a5;
+    border-radius: 20px;
+    font-size: 1rem;
+    background-color: #004488;
+    color: white;
+}
+.search-container input::placeholder { color: #aaccff; }
+
+/* Styles for all header icons */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+.profile-icon a,
+.notification-icon a,
+.logout-icon a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: white; /* Make icons and text white */
+    font-weight: 600;
+}
+
+.notification-icon { position: relative; }
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: #FFC72C; /* CSUB Gold */
+    color: #003366; /* CSUB Blue text */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #003366;
+}
+
+/* Feed container and post card styles */
+.feed-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+.post-card {
+    background-color: white;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    overflow: hidden;
+}
+.post-image { width: 200px; flex-shrink: 0; background-size: cover; background-position: center; }
+.post-content { padding: 1.5rem; display: flex; flex-direction: column; }
+.post-content h3 { margin: 0 0 0.5rem 0; }
+.post-content .post-meta { font-size: 0.9rem; color: #666; margin-bottom: 1rem; }
+.post-content .post-actions { margin-top: auto; display: flex; gap: 10px; }
+.post-content .btn-secondary { background-color: #f1f5f9; color: #003366; }
+
+/* Mobile nav styles */
+.mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background-color: white; border-top: 1px solid #e0e0e0; justify-content: space-around; align-items: center; z-index: 1000; }
+.nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #888; }
+.nav-item.active { color: #003366; }
+.nav-item span { font-size: 0.75rem; }
+
+
+/* Responsive Styles for Dashboard */
+@media (max-width: 768px) {
+    .dashboard-header .search-container, 
+    .dashboard-header .profile-icon span,
+    .dashboard-header .logout-icon span {
+        display: none; /* Hide search and text on mobile header */
+    }
+    .dashboard-header { justify-content: space-between; }
+    .mobile-nav { display: flex; } /* Show mobile nav */
+    .post-card { flex-direction: column; }
+    .post-image { width: 100%; height: 200px; }
+}
+
+/* ---  STYLES FOR CREATE POST FORM --- */
+
+.form-container select,
+.form-container textarea,
 .form-container input[type="text"],
-.form-container input[type="email"],
-.form-container input[type="password"] {
-    box-sizing: border-box !important; 
-    border: 2px solid #ccc; 
-    outline: none; 
-    transition: border-color 0.3s ease;
+.form-container input[type="date"],
+.form-container input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 0.6rem;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
 }
 
-.form-container input.valid {
-  border-color: #28a745; /* Green */
+
+.form-container textarea {
+    resize: none; 
+    min-height: 120px; 
 }
 
-.form-container input.invalid {
-  border-color: #dc3545; /* Red */
+.form-container input[type="file"] {
+    padding: 7px;
+}
+
+.err-small {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: -0.4rem;
+    display: block;
+}
+/* --- NEW STYLES FOR BUTTON-STYLE TYPE SELECTOR --- */
+
+.type-selector {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0.6rem;
+}
+
+.type-option {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+.type-option.active {
+    background-color: #003366; /* CSUB Blue */
+    color: white;
+    border-color: #003366;
+}
+/* --- MORE SPECIFIC STYLES FOR HEADER ICONS --- */
+
+.dashboard-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+
+/* --- ULTIMATE FIX FOR HEADER ICON STYLES --- */
+
+.dashboard-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: auto;
+}
+
+/* This rule uses !important to override all other styles */
+.dashboard-header .profile-icon a,
+.dashboard-header .notification-icon a,
+.dashboard-header .logout-icon a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: white !important;           /* This makes it white */
+    text-decoration: none !important; /* This removes the underline */
+    transition: color 0.2s;
+}
+
+/* Add a hover effect for better UX */
+.dashboard-header .profile-icon a:hover,
+.dashboard-header .notification-icon a:hover,
+.dashboard-header .logout-icon a:hover {
+    color: #FFC72C !important; /* CSUB Gold */
+    text-decoration: none !important;
+}
+
+.notification-icon { 
+    position: relative; 
+}
+
+.notification-count {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background-color: #FFC72C;
+    color: #003366;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #003366;
+}
+
+.step-icon svg {
+    width: 64px;
+    height: 64px;
+    color: #003366; /* CSUB Blue */
 }

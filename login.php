@@ -41,69 +41,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Login – Runnerslist</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
-</head>
-<body class="landing-body">
-  <header>
-    <div class="logo-container">
-      <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo" class="logo">
-    </div>
-  </header>
+    <!doctype html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-g">
+        <title>Login – <?= PROJECT_NAME ?></title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
+    </head>
+    <body>
 
-  <div class="content-card">
-    <main>
-      <a href="<?= $basePath ?>/index.php" class="back-arrow">← Back to Home</a>
-      <h1>Login</h1>
+        <header class="landing-header">
+            <div class="header-content">
+                <a href="<?= $basePath ?>/index.php" class="logo">
+                    <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo">
+                    <span>RunnersList</span>
+                </a>
+                <nav class="main-nav">
+                    <a href="<?= $basePath ?>/index.php">Home</a>
+                    <a href="<?= $basePath ?>/view_posts.php">Browse Items</a>
+                    <a href="<?= $basePath ?>/post_create.php">Report Item</a>
+                    <a href="<?= $basePath ?>/login.php" class="active">Account</a>
+                </nav>
+            </div>
+        </header>
 
-      <?php if ($error_message): ?><div class="err"><?= htmlspecialchars($error_message) ?></div><?php endif; ?>
-      <?php if ($success_message): ?><div class="note"><?= htmlspecialchars($success_message) ?></div><?php endif; ?>
+        <main class="page-container">
+            <div class="content-card">
+                <h1>Login</h1>
+                
+                <?php if ($error_message): ?><div class="err"><?= htmlspecialchars($error_message) ?></div><?php endif; ?>
 
-      <div class="form-container">
-        <form id="loginForm" method="post" action="login.php" novalidate>
-            <label for="email">Email (CSUB only)</label>
-            <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
+                <div class="form-container">
+                    <form method="post" action="login.php">
+                        <label for="email">Email (CSUB only)</label>
+                        <input id="email" type="email" name="email" placeholder="you@csub.edu" required>
 
-            <label for="password">Password</label>
-            <input id="password" type="password" name="password" minlength="8" required>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" required>
 
-            <button type="submit" class="btn">Sign in</button>
-        </form>
-      </div>
+                        <button type="submit" class="btn">Sign in</button>
+                    </form>
+                </div>
 
-      <p class="form-footer-link">Don’t have an account? <a href="<?= $basePath ?>/signup.php">Sign up</a></p>
-    </main>
-  </div>
+                <p class="form-footer-link">
+                    Don't have an account? <a href="<?= $basePath ?>/signup.php">Sign up</a>
+                </p>
+            </div>
+        </main>
 
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      const emailField = document.getElementById("email");
-      const passwordField = document.getElementById("password");
-      let valid = true;
-
-      if (!emailField.value.endsWith("@csub.edu")) {
-        alert("Please use a CSUB email.");
-        emailField.classList.add("invalid");
-        valid = false;
-      } else {
-        emailField.classList.remove("invalid");
-      }
-
-      if (passwordField.value.length < 8) {
-        alert("Password must be at least 8 characters.");
-        passwordField.classList.add("invalid");
-        valid = false;
-      } else {
-        passwordField.classList.remove("invalid");
-      }
-
-      if (!valid) e.preventDefault();
-    });
-  </script>
-</body>
-</html>
+    </body>
+    </html>
