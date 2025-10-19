@@ -792,9 +792,89 @@ body {
     justify-content: center;
     border: 2px solid #003366;
 }
+/* --- POST DETAIL PAGE --- */
 
-.step-icon svg {
-    width: 64px;
-    height: 64px;
-    color: #003366; /* CSUB Blue */
+.post-detail-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+}
+
+.post-type-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background-color: #003366;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.post-detail-header h1 {
+    margin: 0;
+}
+
+.post-detail-header .post-meta {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.post-detail-image img {
+    width: 100%;
+    max-height: 500px; 
+    object-fit: contain;  
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.post-detail-image img {
+    width: 100%;
+    border-radius: 8px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.post-detail-section {
+    margin-bottom: 1.5rem;
+}
+.post-detail-section h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: #003366;
+}
+.post-detail-section p {
+    margin: 0 0 0.5rem 0;
+    line-height: 1.6;
+}
+
+.post-detail-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.post-detail-image {
+    width: 100%;
+    margin: 1.5rem 0;
+    text-align: center; 
+}
+
+.post-detail-image img {
+    max-width: 100%; 
+    max-height: 500px; 
+    border-radius: 8px;
+    object-fit: contain; 
 }
