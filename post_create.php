@@ -81,31 +81,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body>
 
-<header class="dashboard-header">
+    <header class="dashboard-header">
     <a href="<?= $basePath ?>/index.php" class="logo">
         <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo">
-        <span>RunnersList</span>
     </a>
     <div class="header-main-actions">
-        <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary">+ Create Post</a>
-        <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary">My Posts</a>
-    </div>
+    <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary">+ Create Post</a>
+    <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary">My Posts</a>
+</div>
     <div class="search-container">
         <input type="search" placeholder="Search...">
     </div>
-
-    <div class="header-user-actions">
-        <a href="#" class="notification-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-        </a>
-        <a href="<?= $basePath ?>/account.php" class="profile-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span>Account</span>
-        </a>
-        <a href="<?= $basePath ?>/logout.php" class="logout-icon">
-             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-            <span>Logout</span>
-        </a>
+    
+    <div class="header-actions">
+        <div class="notification-icon">
+            <a href="<?= $basePath ?>/inbox.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </a>
+        </div>
+        <div class="profile-icon">
+            <a href="<?= $basePath ?>/account.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Account</span>
+            </a>
+        </div>
+        <div class="logout-icon">
+            <a href="<?= $basePath ?>/logout.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span>Logout</span>
+            </a>
+        </div>
     </div>
 </header>
 
