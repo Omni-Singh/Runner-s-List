@@ -2,6 +2,7 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php');
+require_once('includes/image_validator.php');
 
 // --- Protected Page Logic ---
 if (empty($_SESSION['user_id'])) {
@@ -24,6 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($description === '') $errors['description'] = "Description is required.";
     if (!in_array($type, ['lost', 'found'])) $errors['type'] = "Please select a type.";
 
+    // Image validation using our new validator
+    if (!empty($_FILES['image']['name'])) {
+        $validation_result = validate_and_moderate_image($_FILES['image']);
+        if ($validation_result !== true) {
+            $errors['image'] = $validation_result;
+        }
+    }
+
     if (empty($errors)) {
         try {
             $pdo = get_pdo_connection();
@@ -36,9 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Handle image upload
             if ($post_id && !empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $upload_dir = ROOT_PATH . '/uploads/';
+
                 if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+
                 $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-                $filename = 'post_' . $post_id . '_' . time() . '.' . $ext;
+                $unique_id = uniqid('', true);
+                $filename = 'post_' . $post_id . '_' . $unique_id . '.' . $ext;
                 $filepath = $upload_dir . $filename;
                 $db_path = '/uploads/' . $filename;
                 
@@ -135,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div>
                         <label for="lost_date">Date (optional)</label>
-                        <input type="date" name="lost_date" id="lost_date">
+                        <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($_POST['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
                     </div>
 
                     <div>

@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Universal includes
 require_once('includes/config.php');
 require_once('includes/functions.php');
-require_once('includes/validators.php'); // Assuming you have validation functions here
+require_once('includes/validators.php'); 
+require_once('includes/image_validator.php');
 
 // --- Protected Page Logic ---
 if (empty($_SESSION['user_id'])) {
@@ -61,6 +61,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($location === '') $errors['location'] = "Location is required.";
     if (!in_array($type, ['lost', 'found'])) $errors['type'] = "Please select a valid type.";
 
+    // Image validation if a new file is uploaded
+    if (!empty($_FILES['image']['name'])) {
+        $validation_result = validate_and_moderate_image($_FILES['image']);
+        if ($validation_result !== true) {
+            $errors['image'] = $validation_result;
+        }
+    }
+
     if (empty($errors)) {
         try {
             // Update post in the database
@@ -86,13 +94,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
 
                 $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-                $filename = 'post_' . $post_id . '_' . time() . '.' . $ext;
+                $unique_id = uniqid('', true);
+                $filename = 'post_' . $post_id . '_' . $unique_id . '.' . $ext;
                 $filepath = $upload_dir . $filename;
                 $db_path = '/uploads/' . $filename;
                 
                 if (move_uploaded_file($_FILES['image']['tmp_name'], $filepath)) {
                     $stmt = $pdo->prepare("INSERT INTO post_images (post_id, path) VALUES (?, ?)");
                     $stmt->execute([$post_id, $db_path]);
+
+                    // Update existing_image for display
+                    $existing_image = ['id' => $pdo->lastInsertId(), 'path' => $db_path];
                 }
             }
             
@@ -155,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div>
                 <label for="lost_date">Date (optional)</label>
-                <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($post['lost_date'] ?? '') ?>">
+                <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($post['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
             </div>
 
             <?php if ($existing_image): ?>
