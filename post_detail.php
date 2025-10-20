@@ -1,17 +1,19 @@
 <?php
 require_once('includes/config.php');
 require_once('includes/functions.php');
+require_once('includes/validators.php');
 
-// --- Protected Page Logic ---
+// --- Auth check ---
 if (empty($_SESSION['user_id'])) {
     header("Location: " . $basePath . "/login.php");
     exit;
 }
 
-// --- Fetch Post Data ---
-$post_id = (int)($_GET['id'] ?? 0);
-$post = null;
+// --- Minimal CSRF helper ---
+if (empty($_SESSION['csrf'])) { $_SESSION['csrf'] = bin2hex(random_bytes(32)); }
+function csrf_token() { return $_SESSION['csrf'] ?? ''; }
 
+$post_id = (int)($_GET['id'] ?? 0);
 if ($post_id <= 0) {
     header("Location: " . $basePath . "/dashboard.php");
     exit;
@@ -19,31 +21,45 @@ if ($post_id <= 0) {
 
 try {
     $pdo = get_pdo_connection();
+
     $sql = "SELECT p.*, u.full_name, u.email 
             FROM posts p
             JOIN users u ON p.user_id = u.id
             WHERE p.id = ?";
-    
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$post_id]);
     $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Get all images for this post
     $stmt = $pdo->prepare("SELECT path FROM post_images WHERE post_id = ?");
     $stmt->execute([$post_id]);
     $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
 } catch (Throwable $e) {
     error_log($e->getMessage());
+    $post = null;
 }
 
-// If post not found, redirect back
 if (!$post) {
     header("Location: " . $basePath . "/dashboard.php?msg=notfound");
     exit;
 }
 
-$is_owner = ($post['user_id'] == $_SESSION['user_id']);
+$is_owner      = ($post['user_id'] == $_SESSION['user_id']);
+$prefill_name  = $_SESSION['name']  ?? '';
+$prefill_email = $_SESSION['email'] ?? '';
+
+// Notification badge count (based on last seen)
+$unread_count = 0;
+try {
+    $last_seen = $_SESSION['inbox_last_seen'] ?? '1970-01-01 00:00:00';
+    $q = $pdo->prepare("SELECT COUNT(*) FROM messages WHERE receiver_id = ? AND created_at > ?");
+    $q->execute([(int)$_SESSION['user_id'], $last_seen]);
+    $unread_count = (int)$q->fetchColumn();
+} catch (Throwable $e) {}
+
+$ok  = $_GET['msg'] ?? '';
+$err = $_GET['err'] ?? '';
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -55,6 +71,13 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
+      <style>
+      .badge { background:#e11d48; color:#fff; border-radius:999px; padding:2px 8px; font-size:.75rem; margin-left:4px; }
+      .contact-card { border:1px solid #ddd; border-radius:8px; padding:16px; margin-top:16px; }
+      .note { color:#555; font-size:.9rem; }
+      .err  { background:#ffe6e6; border:1px solid #e00; padding:10px; border-radius:6px; margin:12px 0; }
+      .ok   { background:#e6ffef; border:1px solid #2ecc71; padding:10px; border-radius:6px; margin:12px 0; }
+    </style>
 </head>
 <body>
 
@@ -135,10 +158,35 @@ $is_owner = ($post['user_id'] == $_SESSION['user_id']);
                        class="btn btn-danger"
                        onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</a>
                 <?php else: ?>
-                    <a href="#" class="btn btn-primary">Contact Owner</a>
+                  
                 <?php endif; ?>
             </div>
         </div>
+
+         <?php if (!$is_owner): ?>
+            <div id="contact" class="contact-card">
+                <h2>Contact the Owner</h2>
+                <p class="note">Describe unique details about the item so the owner can verify rightful ownership.</p>
+
+                <form method="post" action="<?= $basePath ?>/contact_submit.php">
+                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                    <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
+                    <input type="hidden" name="to_user_id" value="<?= (int)$post['user_id'] ?>">
+
+                    <label for="c_name">Your Name</label>
+                    <input id="c_name" name="name" type="text" value="<?= htmlspecialchars($prefill_name) ?>" required>
+
+                    <label for="c_email">Your Email</label>
+                    <input id="c_email" name="email" type="email" value="<?= htmlspecialchars($prefill_email) ?>" required>
+
+                    <label for="c_body">Description (required)</label>
+                    <textarea id="c_body" name="body" rows="4" required placeholder="Describe the item, unique marks, where you saw it, etc."></textarea>
+
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+        <?php endif; ?>
+    </div>
     </main>
 
 </body>
