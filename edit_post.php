@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Redirect on success
-            header("Location: " . $basePath . "/my_posts.php?msg=" . urlencode("Post updated successfully!"));
+            header("Location: " . $basePath . "/dashboard.php?msg=" . urlencode("Post updated successfully!"));
             exit;
             
         } catch (Throwable $e) {
@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="landing-body">
   <div class="content-card">
     <main>
-      <a href="<?= $basePath ?>/my_posts.php" class="back-arrow">&larr; Back to My Posts</a>
+      <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
       <h1>Edit Post</h1>
 
       <?php if (!empty($errors['general'])): ?><div class="err"><?= htmlspecialchars($errors['general']) ?></div><?php endif; ?>
