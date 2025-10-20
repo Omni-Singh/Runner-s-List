@@ -45,26 +45,76 @@ try {
   </style>
 </head>
 <body>
-  <div class="container">
-    <a href="dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
-    <h1>Inbox</h1>
 
-    <?php if ($messages): ?>
-      <?php foreach ($messages as $m): ?>
-        <div class="message-card">
-          <div class="message-title">
-            Post: <a href="<?= $basePath ?>/post_detail.php?id=<?= (int)$m['post_id'] ?>"><?= htmlspecialchars($m['post_title']) ?></a>
-          </div>
-          <div class="message-meta">
-            From: <?= htmlspecialchars($m['sender_name']) ?> (<?= htmlspecialchars($m['sender_email']) ?>) • 
-            <?= htmlspecialchars(date('M j, Y g:i a', strtotime($m['created_at']))) ?>
-          </div>
-          <div class="message-body"><?= nl2br(htmlspecialchars($m['body'])) ?></div>
+    <header class="dashboard-header">
+    <a href="<?= $basePath ?>/index.php" class="logo">
+        <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo">
+    </a>
+    <div class="header-main-actions">
+    <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary">+ Create Post</a>
+    <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary">My Posts</a>
+</div>
+    <div class="search-container">
+        <input type="search" placeholder="Search...">
+    </div>
+    
+    <div class="header-actions">
+        <div class="notification-icon">
+            <a href="<?= $basePath ?>/inbox.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            </a>
         </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p class="empty-state">No messages yet.</p>
-    <?php endif; ?>
-  </div>
+        <div class="profile-icon">
+            <a href="<?= $basePath ?>/account.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Account</span>
+            </a>
+        </div>
+        <div class="logout-icon">
+            <a href="<?= $basePath ?>/logout.php">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                <span>Logout</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+    <main class="page-container">
+        <div class="content-card" style="max-width: 800px;">
+            <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
+            <h1>Inbox</h1>
+
+            <div class="message-list">
+                <?php if (!empty($messages)): ?>
+                    <?php foreach ($messages as $m): ?>
+                        <div class="message-card <?= !$m['is_read'] ? 'unread' : '' ?>">
+                            <div class="message-sender">
+                                <strong>From:</strong> <?= htmlspecialchars($m['sender_name']) ?>
+                            </div>
+                            <div class="message-content">
+                                <p class="message-post-link">
+                                    <strong>Regarding Post:</strong> 
+                                    <a href="<?= $basePath ?>/post_detail.php?id=<?= (int)$m['post_id'] ?>"><?= htmlspecialchars($m['post_title']) ?></a>
+                                </p>
+                                <p class="message-body">
+                                    <?= nl2br(htmlspecialchars(substr($m['body'], 0, 200))) ?>
+                                    <?= strlen($m['body']) > 200 ? '...' : '' ?>
+                                </p>
+                            </div>
+                            <div class="message-meta">
+                                <span><?= date('M j, Y g:i a', strtotime($m['created_at'])) ?></span>
+                                <a href="#" class="btn btn-secondary">Reply</a>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <p>You have no messages in your inbox.</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </main>
+
 </body>
 </html>

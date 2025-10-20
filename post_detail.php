@@ -58,8 +58,6 @@ try {
 
 $ok  = $_GET['msg'] ?? '';
 $err = $_GET['err'] ?? '';
-
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -71,18 +69,8 @@ $err = $_GET['err'] ?? '';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
-      <style>
-      .badge { background:#e11d48; color:#fff; border-radius:999px; padding:2px 8px; font-size:.75rem; margin-left:4px; }
-      .contact-card { border:1px solid #ddd; border-radius:8px; padding:16px; margin-top:16px; }
-      .note { color:#555; font-size:.9rem; }
-      .err  { background:#ffe6e6; border:1px solid #e00; padding:10px; border-radius:6px; margin:12px 0; }
-      .ok   { background:#e6ffef; border:1px solid #2ecc71; padding:10px; border-radius:6px; margin:12px 0; }
-    </style>
 </head>
 <body>
-
-
-
 
     <header class="dashboard-header">
     <a href="<?= $basePath ?>/index.php" class="logo">
@@ -92,6 +80,9 @@ $err = $_GET['err'] ?? '';
     <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary">+ Create Post</a>
     <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary">My Posts</a>
 </div>
+    <div class="search-container">
+        <input type="search" placeholder="Search...">
+    </div>
     
     <div class="header-actions">
         <div class="notification-icon">
@@ -114,80 +105,73 @@ $err = $_GET['err'] ?? '';
     </div>
 </header>
 
-
-
-
     <main class="page-container">
-        <div class="content-card" style="max-width: 700px;">
-            <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
-            
-            <div class="post-detail-header">
-                <span class="post-type-badge"><?= strtoupper(htmlspecialchars($post['type'])) ?></span>
-                <h1><?= htmlspecialchars($post['title']) ?></h1>
-                <p class="post-meta">
-                    Posted by <strong><?= htmlspecialchars($post['full_name']) ?></strong> 
-                    on <?= date('F j, Y', strtotime($post['created_at'])) ?>
-                </p>
-            </div>
-
-            <?php if (!empty($images)): ?>
-                <div class="post-detail-image">
-                    <?php foreach ($images as $img): ?>
-                        <img src="<?= $basePath . htmlspecialchars($img['path']) ?>" alt="Post image">
-                    <?php endforeach; ?>
+        <div class="post-detail-grid">
+            <!-- Left Column: Post Details -->
+            <div class="post-details-column">
+                <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
+                <div class="post-detail-header">
+                    <span class="post-type-badge"><?= strtoupper(htmlspecialchars($post['type'])) ?></span>
+                    <h1><?= htmlspecialchars($post['title']) ?></h1>
+                    <p class="post-meta">
+                        Posted by <strong><?= htmlspecialchars($post['full_name']) ?></strong> 
+                        on <?= date('F j, Y', strtotime($post['created_at'])) ?>
+                    </p>
                 </div>
-            <?php endif; ?>
 
-            <div class="post-detail-section">
-                <h3>Description</h3>
-                <p><?= nl2br(htmlspecialchars($post['description'])) ?></p>
-            </div>
-
-            <div class="post-detail-section">
-                <h3>Details</h3>
-                <p><strong>Location:</strong> <?= htmlspecialchars($post['location']) ?></p>
-                <?php if ($post['lost_date']): ?>
-                    <p><strong>Date:</strong> <?= date('F j, Y', strtotime($post['lost_date'])) ?></p>
+                <?php if (!empty($images)): ?>
+                    <div class="post-detail-image">
+                        <img src="<?= $basePath . htmlspecialchars($images[0]['path']) ?>" alt="Post image">
+                    </div>
                 <?php endif; ?>
+
+                <div class="post-detail-section">
+                    <h3>Description</h3>
+                    <p><?= nl2br(htmlspecialchars($post['description'])) ?></p>
+                </div>
+                <div class="post-detail-section">
+                    <h3>Details</h3>
+                    <p><strong>Location:</strong> <?= htmlspecialchars($post['location']) ?></p>
+                    <?php if ($post['lost_date']): ?>
+                        <p><strong>Date:</strong> <?= date('F j, Y', strtotime($post['lost_date'])) ?></p>
+                    <?php endif; ?>
+                </div>
             </div>
 
-            <div class="post-detail-actions">
+            <!-- Right Column: Contact Form or Owner Actions -->
+            <div class="contact-form-column">
                 <?php if ($is_owner): ?>
-                    <a href="<?= $basePath ?>/edit_post.php?id=<?= $post['id'] ?>" class="btn btn-primary">Edit Post</a>
-                    <a href="<?= $basePath ?>/delete_post.php?id=<?= $post['id'] ?>" 
-                       class="btn btn-danger"
-                       onclick="return confirm('Are you sure you want to delete this post?')">Delete Post</a>
+                    <div class="owner-actions-card">
+                        <h2>Your Post</h2>
+                        <p>You are the owner of this post. You can edit or delete it.</p>
+                        <div class="post-detail-actions">
+                            <a href="<?= $basePath ?>/edit_post.php?id=<?= $post['id'] ?>" class="btn btn-primary">Edit Post</a>
+                            <a href="<?= $basePath ?>/delete_post.php?id=<?= $post['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete Post</a>
+                        </div>
+                    </div>
                 <?php else: ?>
-                  
+                    <div class="form-container contact-card">
+                        <h2>Contact the Owner</h2>
+                        
+                        <?php if ($ok): ?><div class="ok"><?= htmlspecialchars($ok) ?></div><?php endif; ?>
+                        <?php if ($err): ?><div class="err"><?= htmlspecialchars($err) ?></div><?php endif; ?>
+                        
+                        <p class="note">Describe unique details about the item to help the owner verify your claim.</p>
+                        
+                        <form method="post" action="<?= $basePath ?>/contact_submit.php">
+                            <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                            <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
+                            <input type="hidden" name="to_user_id" value="<?= (int)$post['user_id'] ?>">
+                            
+                            <label for="c_body">Message</label>
+                            <textarea id="c_body" name="body" rows="5" required></textarea>
+                            <button type="submit" class="btn">Send Message</button>
+                        </form>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
-
-         <?php if (!$is_owner): ?>
-            <div id="contact" class="contact-card">
-                <h2>Contact the Owner</h2>
-                <p class="note">Describe unique details about the item so the owner can verify rightful ownership.</p>
-
-                <form method="post" action="<?= $basePath ?>/contact_submit.php">
-                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-                    <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
-                    <input type="hidden" name="to_user_id" value="<?= (int)$post['user_id'] ?>">
-
-                    <label for="c_name">Your Name</label>
-                    <input id="c_name" name="name" type="text" value="<?= htmlspecialchars($prefill_name) ?>" required>
-
-                    <label for="c_email">Your Email</label>
-                    <input id="c_email" name="email" type="email" value="<?= htmlspecialchars($prefill_email) ?>" required>
-
-                    <label for="c_body">Description (required)</label>
-                    <textarea id="c_body" name="body" rows="4" required placeholder="Describe the item, unique marks, where you saw it, etc."></textarea>
-
-                    <button type="submit" class="btn">Send Message</button>
-                </form>
-            </div>
-        <?php endif; ?>
-    </div>
     </main>
-
 </body>
 </html>
+

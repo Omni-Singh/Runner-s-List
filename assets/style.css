@@ -262,16 +262,19 @@ body {
     .hero-actions { justify-content: center; }
     .steps-container { flex-direction: column; }
 }
+
 /* --- CONTAINER FOR LOGIN/SIGNUP/ABOUT PAGES --- */
 .page-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* This centers the card vertically */
-    min-height: calc(100vh - 80px); /* Adjusts height to fill screen below header */
+    justify-content: center;
+    min-height: calc(100vh - 80px);
     padding: 2rem;
     box-sizing: border-box;
+    margin-top: 2rem; 
 }
+
 /* --- NEW STYLES FOR DASHBOARD PAGE --- */
 
 .dashboard-card {
@@ -877,4 +880,205 @@ body {
     max-height: 500px; 
     border-radius: 8px;
     object-fit: contain; 
+}
+/* --- NEW STYLES FOR TWO-COLUMN POST DETAIL PAGE --- */
+
+.post-detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; 
+    gap: 2rem;
+    width: 100%;
+    max-width: 1100px; 
+    align-items: start; 
+}
+
+.post-details-column {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.contact-form-column .contact-card,
+.contact-form-column .owner-actions-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    position: sticky; 
+    top: 100px; 
+}
+
+.owner-actions-card h2 {
+    margin-top: 0;
+}
+
+.contact-card .note {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1rem;
+}
+
+
+@media (max-width: 900px) {
+    .post-detail-grid {
+        grid-template-columns: 1fr; 
+    }
+    
+    .contact-form-column .contact-card,
+    .contact-form-column .owner-actions-card {
+        position: static; 
+        top: auto;
+    }
+}
+
+/* --- NEW STYLES FOR MY POSTS PAGE --- */
+
+.my-posts-section {
+    margin-top: 2rem;
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+}
+
+.my-posts-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+
+.my-post-card {
+    display: flex;
+    gap: 1.5rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+
+.my-post-card.resolved {
+    opacity: 0.7;
+}
+
+.my-post-image {
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    border-radius: 6px;
+}
+
+.my-post-content {
+    flex-grow: 1;
+}
+
+.my-post-content h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.2rem;
+}
+
+.my-post-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.my-post-actions .btn,
+.my-post-actions .btn-secondary,
+.my-post-actions .btn-danger {
+    padding: 6px 14px;
+    font-size: 0.9rem;
+}
+
+.resolved-badge {
+    font-weight: bold;
+    color: #28a745;
+    font-size: 0.9rem;
+    margin-left: auto;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: #f8f9fa;
+    border: 1px dashed #ced4da;
+    border-radius: 8px;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin: 0 0 1.5rem 0;
+}
+
+/* --- NEW STYLES FOR INBOX PAGE --- */
+
+.message-list {
+    margin-top: 2rem;
+}
+
+.message-card {
+    display: grid;
+    grid-template-columns: 150px 1fr 200px; 
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    align-items: start;
+}
+
+.message-card:last-child {
+    border-bottom: none;
+}
+
+.message-card.unread {
+    background-color: #f8f9fa;
+    border-left: 4px solid #003366;
+    padding-left: calc(1.5rem - 4px);
+}
+
+.message-sender {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.message-post-link {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+}
+.message-post-link a {
+    font-weight: 600;
+}
+
+.message-body {
+    margin: 0;
+    color: #6c757d;
+    line-height: 1.6;
+}
+
+.message-meta {
+    text-align: right;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.message-meta .btn {
+    margin-top: 1rem;
+    padding: 6px 14px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .message-card {
+        grid-template-columns: 1fr; 
+        gap: 1rem;
+    }
+    .message-meta {
+        text-align: left;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
