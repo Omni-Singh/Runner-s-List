@@ -139,7 +139,7 @@ $err = $_GET['err'] ?? '';
             </div>
 
             <!-- Right Column: Contact Form or Owner Actions -->
-            <div class="contact-form-column">
+            <div id ="contact" class="contact-form-column">
                 <?php if ($is_owner): ?>
                     <div class="owner-actions-card">
                         <h2>Your Post</h2>
@@ -159,14 +159,27 @@ $err = $_GET['err'] ?? '';
                         <p class="note">Describe unique details about the item to help the owner verify your claim.</p>
                         
                         <form method="post" action="<?= $basePath ?>/contact_submit.php">
-                            <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-                            <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
-                            <input type="hidden" name="to_user_id" value="<?= (int)$post['user_id'] ?>">
-                            
-                            <label for="c_body">Message</label>
-                            <textarea id="c_body" name="body" rows="5" required></textarea>
-                            <button type="submit" class="btn">Send Message</button>
-                        </form>
+                             <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                             <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
+                             <input type="hidden" name="to_user_id" value="<?= (int)$post['user_id'] ?>">
+
+                            <div>
+                                <label for="c_name">Your Name</label>
+                                <input id="c_name" name="name" type="text" value="<?= htmlspecialchars($prefill_name) ?>" required>
+                            </div>
+
+                            <div>
+                                <label for="c_email">Your Email</label>
+                                <input id="c_email" name="email" type="email" value="<?= htmlspecialchars($prefill_email) ?>" required>
+                            </div>
+
+                            <div>
+                                <label for="c_body">Message</label>
+                                <textarea id="c_body" name="body" rows="5" required></textarea>
+                            </div>
+
+    <button type="submit" class="btn">Send Message</button>
+</form>
                     </div>
                 <?php endif; ?>
             </div>
