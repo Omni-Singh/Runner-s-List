@@ -179,8 +179,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div>
                 <label for="image">Change Image (optional)</label>
-                <input type="file" name="image" id="image" accept="image/*">
-                <small>Upload a new image to replace the current one.</small>
+                <input 
+                    type="file" 
+                    name="image" 
+                    id="image" 
+                    accept=".jpg,.jpeg,.png,.webp"
+                    onchange="validateImage(this)"
+                >
+                <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
+                <?php if (!empty($errors['image'])): ?><div class="err-small"><?= $errors['image'] ?></div><?php endif; ?>
             </div>
 
             <button type="submit" class="btn">Update Post</button>
@@ -188,5 +195,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
     </main>
   </div>
+  <script>
+  function validateImage(input) {
+      if (!input.files || !input.files[0]) return;
+      
+      const file = input.files[0];
+      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+      const maxSize = 5 * 1024 * 1024;
+      
+      const fileName = file.name.toLowerCase();
+      const extension = fileName.split('.').pop();
+      
+      if (!allowedExtensions.includes(extension)) {
+          alert('🚫 INVALID FILE TYPE!\n\n' +
+                'File: ' + file.name + '\n' +
+                'Type: .' + extension.toUpperCase() + '\n\n' +
+                '✅ ALLOWED: JPG, PNG, WEBP only\n' +
+                '❌ NOT ALLOWED: GIF, PDF, TXT, etc.');
+          input.value = '';
+          return false;
+      }
+      
+      if (file.size > maxSize) {
+          alert('🚫 FILE TOO LARGE!\n\n' +
+                'File: ' + file.name + '\n' +
+                'Size: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB\n\n' +
+                'Maximum allowed: 5 MB');
+          input.value = '';
+          return false;
+      }
+      
+      console.log('✅ Valid file selected: ' + file.name);
+      return true;
+  }
+  </script>
 </body>
 </html>
