@@ -152,7 +152,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <div>
                         <label for="image">Image (optional)</label>
-                        <input type="file" name="image" id="image" accept="image/*">
+                        <input 
+                            type="file" 
+                            name="image" 
+                            id="image" 
+                            accept=".jpg,.jpeg,.png,.webp"
+                             onchange="validateImage(this)"
+                        >
+                        <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
+                        <?php if (!empty($errors['image'])): ?><div class="err-small"><?= $errors['image'] ?></div><?php endif; ?>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Create Post</button>
@@ -163,6 +171,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 
     <script>
+    function validateImage(input) {
+    if (!input.files || !input.files[0]) return;
+    
+    const file = input.files[0];
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    // Get file extension
+    const fileName = file.name.toLowerCase();
+    const extension = fileName.split('.').pop();
+    
+    // Check extension
+    if (!allowedExtensions.includes(extension)) {
+        alert('🚫 INVALID FILE TYPE!\n\n' +
+              'File: ' + file.name + '\n' +
+              'Type: .' + extension.toUpperCase() + '\n\n' +
+              '✅ ALLOWED: JPG, PNG, WEBP only\n' +
+              '❌ NOT ALLOWED: GIF, PDF, TXT, etc.');
+        input.value = '';
+        return false;
+    }
+    
+    // Check file size
+    if (file.size > maxSize) {
+        alert('🚫 FILE TOO LARGE!\n\n' +
+              'File: ' + file.name + '\n' +
+              'Size: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB\n\n' +
+              'Maximum allowed: 5 MB');
+        input.value = '';
+        return false;
+    }
+    
+    // File is valid, show confirmation
+    console.log('✅ Valid file selected: ' + file.name);
+    return true;
+    }
     document.addEventListener('DOMContentLoaded', function() {
         const typeSelector = document.querySelector('.type-selector');
         const hiddenInput = document.getElementById('type-input');
