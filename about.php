@@ -10,12 +10,8 @@ require_once('includes/config.php');
   <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
 </head>
 <body class="landing-body">
-  <header>
-    <div class="logo-container">
-      <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo" class="logo">
-    </div>
-    <h1>About Runnerslist</h1>
-  </header>
+
+<?php require_once('includes/header.php'); ?>
 
   <div class="content-card">
     <main>

@@ -67,116 +67,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Set page title
+$pageTitle = "Create Post";
+
+// Include header
+require_once('includes/header.php');
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Create Post – <?= PROJECT_NAME ?></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
-</head>
-<body>
 
-    <header class="dashboard-header">
-    <a href="<?= $basePath ?>/index.php" class="logo">
-        <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo">
-    </a>
-    <div class="header-main-actions">
-    <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary">+ Create Post</a>
-    <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary">My Posts</a>
+<!-- Page content starts here -->
+<div class="page-container">
+    <div class="content-card" style="max-width: 600px;">
+        <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
+        <h1>Create Lost/Found Post</h1>
+
+        <?php if (!empty($errors['general'])): ?>
+            <div class="err"><?= htmlspecialchars($errors['general']) ?></div>
+        <?php endif; ?>
+
+        <div class="form-container">
+            <form method="POST" action="post_create.php" enctype="multipart/form-data">
+                
+                <div>
+                    <label for="type">Type *</label>
+                    <div class="type-selector">
+                        <div class="type-option" data-value="lost">Lost</div>
+                        <div class="type-option" data-value="found">Found</div>
+                    </div>
+                    <input type="hidden" name="type" id="type-input" required>
+                    <?php if (!empty($errors['type'])): ?>
+                        <div class="err-small"><?= $errors['type'] ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label for="title">Title *</label>
+                    <input type="text" name="title" id="title" value="<?= htmlspecialchars($_POST['title'] ?? '') ?>" required>
+                    <?php if (!empty($errors['title'])): ?>
+                        <div class="err-small"><?= $errors['title'] ?></div>
+                    <?php endif; ?>
+                </div>
+                
+                <div>
+                    <label for="description">Description *</label>
+                    <textarea name="description" id="description" rows="5" required><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
+                    <?php if (!empty($errors['description'])): ?>
+                        <div class="err-small"><?= $errors['description'] ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label for="location">Location *</label>
+                    <input type="text" name="location" id="location" value="<?= htmlspecialchars($_POST['location'] ?? '') ?>" required>
+                    <?php if (!empty($errors['location'])): ?>
+                        <div class="err-small"><?= $errors['location'] ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <div>
+                    <label for="lost_date">Date (optional)</label>
+                    <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($_POST['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
+                </div>
+
+                <div>
+                    <label for="image">Image (optional)</label>
+                    <input 
+                        type="file" 
+                        name="image" 
+                        id="image" 
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onchange="validateImage(this)"
+                    >
+                    <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
+                    <?php if (!empty($errors['image'])): ?>
+                        <div class="err-small"><?= $errors['image'] ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Post</button>
+
+            </form>
+        </div>
+    </div>
 </div>
-    <div class="search-container">
-        <input type="search" placeholder="Search...">
-    </div>
-    
-    <div class="header-actions">
-        <div class="notification-icon">
-            <a href="<?= $basePath ?>/inbox.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-            </a>
-        </div>
-        <div class="profile-icon">
-            <a href="<?= $basePath ?>/account.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>Account</span>
-            </a>
-        </div>
-        <div class="logout-icon">
-            <a href="<?= $basePath ?>/logout.php">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                <span>Logout</span>
-            </a>
-        </div>
-    </div>
-</header>
 
-    <main class="page-container">
-        <div class="content-card" style="max-width: 600px;">
-            <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
-            <h1>Create Lost/Found Post</h1>
-
-            <?php if (!empty($errors['general'])): ?><div class="err"><?= htmlspecialchars($errors['general']) ?></div><?php endif; ?>
-
-            <div class="form-container">
-                <form method="POST" action="post_create.php" enctype="multipart/form-data">
-                    
-                    <div>
-                        <label for="type">Type *</label>
-                        <div class="type-selector">
-                            <div class="type-option" data-value="lost">Lost</div>
-                            <div class="type-option" data-value="found">Found</div>
-                        </div>
-                        <input type="hidden" name="type" id="type-input" required>
-                        <?php if (!empty($errors['type'])): ?><div class="err-small"><?= $errors['type'] ?></div><?php endif; ?>
-                    </div>
-
-                    <div>
-                        <label for="title">Title *</label>
-                        <input type="text" name="title" id="title" required>
-                         <?php if (!empty($errors['title'])): ?><div class="err-small"><?= $errors['title'] ?></div><?php endif; ?>
-                    </div>
-                    
-                    <div>
-                        <label for="description">Description *</label>
-                        <textarea name="description" id="description" rows="5" required></textarea>
-                    </div>
-
-                    <div>
-                        <label for="location">Location *</label>
-                        <input type="text" name="location" id="location" required>
-                    </div>
-
-                    <div>
-                        <label for="lost_date">Date (optional)</label>
-                        <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($_POST['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
-                    </div>
-
-                    <div>
-                        <label for="image">Image (optional)</label>
-                        <input 
-                            type="file" 
-                            name="image" 
-                            id="image" 
-                            accept=".jpg,.jpeg,.png,.webp"
-                             onchange="validateImage(this)"
-                        >
-                        <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
-                        <?php if (!empty($errors['image'])): ?><div class="err-small"><?= $errors['image'] ?></div><?php endif; ?>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Create Post</button>
-
-                </form>
-            </div>
-        </div>
-    </main>
-
-    <script>
-    function validateImage(input) {
+<script>
+function validateImage(input) {
     if (!input.files || !input.files[0]) return;
     
     const file = input.files[0];
@@ -211,25 +187,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // File is valid, show confirmation
     console.log('✅ Valid file selected: ' + file.name);
     return true;
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const typeSelector = document.querySelector('.type-selector');
-        const hiddenInput = document.getElementById('type-input');
-        const options = document.querySelectorAll('.type-option');
+}
 
-        typeSelector.addEventListener('click', function(e) {
-            if (e.target && e.target.matches('.type-option')) {
-                const selectedValue = e.target.dataset.value;
-                hiddenInput.value = selectedValue;
+document.addEventListener('DOMContentLoaded', function() {
+    const typeSelector = document.querySelector('.type-selector');
+    const hiddenInput = document.getElementById('type-input');
+    const options = document.querySelectorAll('.type-option');
 
-                // Update active class on buttons
-                options.forEach(option => option.classList.remove('active'));
-                e.target.classList.add('active');
-            }
-        });
+    typeSelector.addEventListener('click', function(e) {
+        if (e.target && e.target.matches('.type-option')) {
+            const selectedValue = e.target.dataset.value;
+            hiddenInput.value = selectedValue;
+
+            // Update active class on buttons
+            options.forEach(option => option.classList.remove('active'));
+            e.target.classList.add('active');
+        }
     });
-    </script>
+});
+</script>
 
-</body>
-</html>
-
+<?php require_once('includes/footer.php'); ?>

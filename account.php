@@ -108,85 +108,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $successMsg = flash('success');
 $errorMsg   = flash('error');
+
+// Set page title
+$pageTitle = "Account Settings";
+
+// Include header
+require_once('includes/header.php');
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Account Settings – <?= PROJECT_NAME ?></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
-</head>
-<body>
 
-    <header class="landing-header">
-        <div class="header-content">
-            <a href="<?= $basePath ?>/index.php" class="logo">
-                <img src="<?= $basePath ?>/assets/csub_logo.png" alt="CSUB Logo">
-                <span>RunnersList</span>
-            </a>
-            <nav class="main-nav">
-                <a href="<?= $basePath ?>/view_posts.php">Browse Items</a>
-                <a href="<?= $basePath ?>/post_create.php">Report Item</a>
-                <a href="<?= $basePath ?>/dashboard.php" class="active">Account</a>
-            </nav>
+<!-- Page content starts here -->
+<div class="page-container">
+    <div class="account-container">
+        <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
+        <h1>Account Settings</h1>
+
+        <?php if ($errorMsg): ?>
+            <div class="err"><?= htmlspecialchars($errorMsg) ?></div>
+        <?php endif; ?>
+        
+        <?php if ($successMsg): ?>
+            <div class="ok"><?= htmlspecialchars($successMsg) ?></div>
+        <?php endif; ?>
+
+        <!-- Update Profile Card -->
+        <div class="settings-card">
+            <h2>Profile</h2>
+            <form method="post" action="account.php" class="form-container">
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                <input type="hidden" name="action" value="update_profile">
+                
+                <label for="full_name">Full Name</label>
+                <input id="full_name" name="full_name" type="text" value="<?= htmlspecialchars($user['full_name']) ?>" required>
+                
+                <label for="email">Email (CSUB)</label>
+                <input id="email" name="email" type="email" value="<?= htmlspecialchars($user['email']) ?>" required>
+                
+                <button type="submit" class="btn">Save Changes</button>
+            </form>
         </div>
-    </header>
 
-    <main class="page-container">
-        <div class="account-container">
-            <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
-            <h1>Account Settings</h1>
-
-            <?php if ($errorMsg): ?><div class="err"><?= htmlspecialchars($errorMsg) ?></div><?php endif; ?>
-            <?php if ($successMsg): ?><div class="ok"><?= htmlspecialchars($successMsg) ?></div><?php endif; ?>
-
-            <!-- Update Profile Card -->
-            <div class="settings-card">
-                <h2>Profile</h2>
-                <form method="post" action="account.php" class="form-container">
-                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-                    <input type="hidden" name="action" value="update_profile">
-                    <label for="full_name">Full Name</label>
-                    <input id="full_name" name="full_name" type="text" value="<?= htmlspecialchars($user['full_name']) ?>" required>
-                    <label for="email">Email (CSUB)</label>
-                    <input id="email" name="email" type="email" value="<?= htmlspecialchars($user['email']) ?>" required>
-                    <button type="submit" class="btn">Save Changes</button>
-                </form>
-            </div>
-
-            <!-- Change Password Card -->
-            <div class="settings-card">
-                <h2>Change Password</h2>
-                <form method="post" action="account.php" class="form-container">
-                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-                    <input type="hidden" name="action" value="change_password">
-                    <label for="current_password">Current Password</label>
-                    <input id="current_password" name="current_password" type="password" required>
-                    <label for="new_password">New Password</label>
-                    <input id="new_password" name="new_password" type="password" minlength="8" required>
-                    <label for="confirm_password">Confirm New Password</label>
-                    <input id="confirm_password" name="confirm_password" type="password" minlength="8" required>
-                    <button type="submit" class="btn">Update Password</button>
-                </form>
-            </div>
-
-            <!-- Delete Account Card -->
-            <div class="settings-card danger-zone">
-                <h2>Delete Your Account</h2>
-                <p>This action is permanent and will remove all your data.</p>
-                <form method="post" action="account.php" class="form-container">
-                    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-                    <input type="hidden" name="action" value="delete_account">
-                    <label for="confirm_text">To confirm, type <strong>DELETE</strong></label>
-                    <input id="confirm_text" name="confirm_text" type="text" pattern="DELETE" required>
-                    <button type="submit" class="btn btn-danger">Delete My Account</button>
-                </form>
-            </div>
+        <!-- Change Password Card -->
+        <div class="settings-card">
+            <h2>Change Password</h2>
+            <form method="post" action="account.php" class="form-container">
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                <input type="hidden" name="action" value="change_password">
+                
+                <label for="current_password">Current Password</label>
+                <input id="current_password" name="current_password" type="password" required>
+                
+                <label for="new_password">New Password</label>
+                <input id="new_password" name="new_password" type="password" minlength="8" required>
+                
+                <label for="confirm_password">Confirm New Password</label>
+                <input id="confirm_password" name="confirm_password" type="password" minlength="8" required>
+                
+                <button type="submit" class="btn">Update Password</button>
+            </form>
         </div>
-    </main>
-</body>
-</html>
+
+        <!-- Delete Account Card -->
+        <div class="settings-card danger-zone">
+            <h2>Delete Your Account</h2>
+            <p>This action is permanent and will remove all your data.</p>
+            <form method="post" action="account.php" class="form-container">
+                <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                <input type="hidden" name="action" value="delete_account">
+                
+                <label for="confirm_text">To confirm, type <strong>DELETE</strong></label>
+                <input id="confirm_text" name="confirm_text" type="text" pattern="DELETE" placeholder="Type DELETE" required>
+                
+                <button type="submit" class="btn btn-danger">Delete My Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<?php require_once('includes/footer.php'); ?>
