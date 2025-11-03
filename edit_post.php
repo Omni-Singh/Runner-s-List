@@ -3,6 +3,7 @@ require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php'); 
 require_once('includes/image_validator.php');
+require_once('includes/text_validator.php');
 
 // --- Protected Page Logic ---
 if (empty($_SESSION['user_id'])) {
@@ -56,6 +57,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($location === '') $errors['location'] = "Location is required.";
     if (!in_array($type, ['lost', 'found'])) $errors['type'] = "Please select a valid type.";
 
+    // Text moderation using Sightengine
+    if ($title !== '') {
+        $title_check = validate_text_content($title, 'title');
+        if ($title_check !== true) {
+            $errors['title'] = $title_check;
+        }
+    }
+    
+    if ($description !== '') {
+        $description_check = validate_text_content($description, 'description');
+        if ($description_check !== true) {
+            $errors['description'] = $description_check;
+        }
+    }
+    
     // Image validation if a new file is uploaded
     if (!empty($_FILES['image']['name'])) {
         $validation_result = validate_and_moderate_image($_FILES['image']);
