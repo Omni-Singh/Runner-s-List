@@ -30,7 +30,14 @@
 
     <!-- Search Bar -->
     <div class="search-container">
-        <input type="search" placeholder="Search...">
+        <form method="GET" action="<?= $basePath ?>/dashboard.php">
+        <input 
+            type="search" 
+            name="search" 
+            placeholder="Search posts..." 
+            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+        >
+    </form>
     </div>
     
     <!-- User Actions (Inbox, Account, Logout) -->
