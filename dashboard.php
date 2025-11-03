@@ -12,6 +12,11 @@ $postsPerPage = 10;
 $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($currentPage - 1) * $postsPerPage;
 
+// Search and filter parameters
+$searchQuery = trim($_GET['search'] ?? '');
+$typeFilter = $_GET['type'] ?? '';
+$sortOrder = $_GET['sort'] ?? 'newest';
+
 $posts = [];
 $totalPosts = 0;
 $totalPages = 0;
@@ -19,9 +24,46 @@ $totalPages = 0;
 try {
     $pdo = get_pdo_connection();
     
-    // Get total count of active posts
-    $countSql = "SELECT COUNT(*) as total FROM posts WHERE status = 'ACTIVE'";
-    $countStmt = $pdo->query($countSql);
+    // Build WHERE clause
+    $whereConditions = ["p.status = 'ACTIVE'"];
+    $params = [];
+
+    // Add search condition
+    if ($searchQuery !== '') {
+        $searchParam = '%' . $searchQuery . '%';
+        $whereConditions[] = "(p.title LIKE :search_title OR p.description LIKE :search_desc OR p.location LIKE :search_loc)";
+        $params[':search_title'] = $searchParam;
+        $params[':search_desc'] = $searchParam;
+        $params[':search_loc'] = $searchParam;
+    }
+    
+    // Add type filter
+    if ($typeFilter !== '' && in_array($typeFilter, ['lost', 'found'])) {
+        $whereConditions[] = "p.type = :type";
+        $params[':type'] = $typeFilter;
+    }
+    
+    $whereClause = implode(' AND ', $whereConditions);
+    
+    // Determine sort order
+    switch($sortOrder) {
+        case 'oldest':
+            $orderBy = 'p.created_at ASC';
+            break;
+        case 'title':
+            $orderBy = 'p.title ASC';
+            break;
+        default:
+            $orderBy = 'p.created_at DESC';
+    }
+
+    // Get total count of filtered posts
+    $countSql = "SELECT COUNT(*) as total FROM posts p WHERE {$whereClause}";
+    $countStmt = $pdo->prepare($countSql);
+    foreach ($params as $key => $value) {
+        $countStmt->bindValue($key, $value);
+    }
+    $countStmt->execute();
     $totalPosts = (int)$countStmt->fetch(PDO::FETCH_ASSOC)['total'];
     $totalPages = ceil($totalPosts / $postsPerPage);
     
@@ -30,11 +72,17 @@ try {
                 (SELECT path FROM post_images WHERE post_id = p.id LIMIT 1) as image_path
             FROM posts p
             JOIN users u ON p.user_id = u.id
-            WHERE p.status = 'ACTIVE'
-            ORDER BY p.created_at DESC
+            WHERE {$whereClause}
+            ORDER BY {$orderBy}
             LIMIT :limit OFFSET :offset";
     
     $stmt = $pdo->prepare($sql);
+
+    // Bind search parameter if exists
+    foreach ($params as $key => $value) {
+        $stmt->bindValue($key, $value);
+    }
+
     $stmt->bindValue(':limit', $postsPerPage, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
@@ -53,6 +101,66 @@ require_once('includes/header.php');
 
 <!-- Page content starts here -->
 <div class="feed-container">
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-bar" style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <form method="GET" action="<?= $basePath ?>/dashboard.php" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+            <!-- Search Input -->
+            <div style="flex: 1; min-width: 250px;">
+                <input 
+                    type="search" 
+                    name="search" 
+                    placeholder="Search by title, description, or location..." 
+                    value="<?= htmlspecialchars($searchQuery) ?>"
+                    style="width: 100%; padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem;"
+                >
+            </div>
+            
+            <!-- Type Filter -->
+            <select name="type" style="padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; background: white;">
+                <option value="">All Types</option>
+                <option value="lost" <?= $typeFilter === 'lost' ? 'selected' : '' ?>>Lost Items</option>
+                <option value="found" <?= $typeFilter === 'found' ? 'selected' : '' ?>>Found Items</option>
+            </select>
+            
+            <!-- Sort Order -->
+            <select name="sort" style="padding: 0.75rem 1rem; border: 2px solid #ddd; border-radius: 8px; font-size: 1rem; background: white;">
+                <option value="newest" <?= $sortOrder === 'newest' ? 'selected' : '' ?>>Newest First</option>
+                <option value="oldest" <?= $sortOrder === 'oldest' ? 'selected' : '' ?>>Oldest First</option>
+                <option value="title" <?= $sortOrder === 'title' ? 'selected' : '' ?>>Title A-Z</option>
+            </select>
+            
+            <!-- Search Button -->
+            <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem; white-space: nowrap;">
+                Search
+            </button>
+            
+            <!-- Clear Filters -->
+            <?php if ($searchQuery !== '' || $typeFilter !== '' || $sortOrder !== 'newest'): ?>
+                <a href="<?= $basePath ?>/dashboard.php" class="btn btn-secondary" style="padding: 0.75rem 1.5rem; text-decoration: none; white-space: nowrap;">
+                    Clear
+                </a>
+            <?php endif; ?>
+        </form>
+        
+        <!-- Search Results Info -->
+        <?php if ($searchQuery !== '' || $typeFilter !== ''): ?>
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; color: #666;">
+                <?php if ($totalPosts > 0): ?>
+                    Found <strong><?= $totalPosts ?></strong> result<?= $totalPosts !== 1 ? 's' : '' ?>
+                    <?php if ($searchQuery !== ''): ?>
+                        for "<strong><?= htmlspecialchars($searchQuery) ?></strong>"
+                    <?php endif; ?>
+                <?php else: ?>
+                    <strong>No results found</strong>
+                    <?php if ($searchQuery !== ''): ?>
+                        for "<?= htmlspecialchars($searchQuery) ?>"
+                    <?php endif; ?>
+                    . Try different search terms or <a href="<?= $basePath ?>/dashboard.php" style="color: #003366;">clear filters</a>.
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <?php if (!empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
             <div class="post-card">
@@ -71,10 +179,19 @@ require_once('includes/header.php');
         
         <!-- Pagination (only show if more than one page) -->
         <?php if ($totalPages > 1): ?>
+            <?php
+            // Build query string for pagination
+            $paginationParams = [];
+            if ($searchQuery !== '') $paginationParams[] = 'search=' . urlencode($searchQuery);
+            if ($typeFilter !== '') $paginationParams[] = 'type=' . urlencode($typeFilter);
+            if ($sortOrder !== 'newest') $paginationParams[] = 'sort=' . urlencode($sortOrder);
+            $queryString = !empty($paginationParams) ? '&' . implode('&', $paginationParams) : '';
+            ?>
+
             <div class="pagination">
                 <!-- Previous button -->
                 <?php if ($currentPage > 1): ?>
-                    <a href="?page=<?= $currentPage - 1 ?>" class="pagination-btn">
+                     <a href="?page=<?= $currentPage - 1 ?><?= $queryString ?>" class="pagination-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
                         Previous
                     </a>
@@ -89,7 +206,7 @@ require_once('includes/header.php');
                     
                     // First page + ellipsis
                     if ($startPage > 1): ?>
-                        <a href="?page=1" class="pagination-number">1</a>
+                        <a href="?page=1<?= $queryString ?>" class="pagination-number">1</a>
                         <?php if ($startPage > 2): ?>
                             <span class="pagination-ellipsis">...</span>
                         <?php endif; ?>
@@ -97,7 +214,7 @@ require_once('includes/header.php');
                     
                     <!-- Page numbers -->
                     <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                        <a href="?page=<?= $i ?>" class="pagination-number <?= $i == $currentPage ? 'active' : '' ?>">
+                        <a href="?page=<?= $i ?><?= $queryString ?>" class="pagination-number <?= $i == $currentPage ? 'active' : '' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
@@ -107,13 +224,13 @@ require_once('includes/header.php');
                         <?php if ($endPage < $totalPages - 1): ?>
                             <span class="pagination-ellipsis">...</span>
                         <?php endif; ?>
-                        <a href="?page=<?= $totalPages ?>" class="pagination-number"><?= $totalPages ?></a>
+                        <a href="?page=<?= $totalPages ?><?= $queryString ?>" class="pagination-number"><?= $totalPages ?></a>
                     <?php endif; ?>
                 </div>
                 
                 <!-- Next button -->
                 <?php if ($currentPage < $totalPages): ?>
-                    <a href="?page=<?= $currentPage + 1 ?>" class="pagination-btn">
+                    <a href="?page=<?= $currentPage + 1 ?><?= $queryString ?>" class="pagination-btn">
                         Next
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </a>

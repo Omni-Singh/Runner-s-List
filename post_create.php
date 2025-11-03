@@ -3,6 +3,7 @@ require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php');
 require_once('includes/image_validator.php');
+require_once('includes/text_validator.php');
 
 // --- Protected Page Logic ---
 if (empty($_SESSION['user_id'])) {
@@ -25,7 +26,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($description === '') $errors['description'] = "Description is required.";
     if (!in_array($type, ['lost', 'found'])) $errors['type'] = "Please select a type.";
 
-    // Image validation using our new validator
+    // Text moderation using validator
+    if ($title !== '') {
+        $title_check = validate_text_content($title, 'title');
+        if ($title_check !== true) {
+            $errors['title'] = $title_check;
+        }
+    }
+
+    if ($description !== '') {
+        $description_check = validate_text_content($description, 'description');
+        if ($description_check !== true) {
+            $errors['description'] = $description_check;
+        }
+    }
+
+    if ($location !== '') {
+        $location_check = validate_text_content($location, 'location');
+        if ($location_check !== true) {
+            $errors['location'] = $location_check;
+        }
+    }
+    
+    // Image validation using validator
     if (!empty($_FILES['image']['name'])) {
         $validation_result = validate_and_moderate_image($_FILES['image']);
         if ($validation_result !== true) {

@@ -2,6 +2,7 @@
 require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php');
+require_once('includes/text_validator.php');
 
 if (empty($_SESSION['user_id'])) {
   header("Location: " . $basePath . "/login.php");
@@ -30,6 +31,14 @@ $errors = [];
 if ($name === '')  { $errors[] = "Name is required."; }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) { $errors[] = "Valid email is required."; }
 if ($body === '')  { $errors[] = "Description is required."; }
+
+// Text moderation for message body
+if ($body !== '') {
+  $body_check = validate_text_content($body, 'message');
+  if ($body_check !== true) {
+    $errors[] = $body_check;
+  }
+}
 
 if (!empty($errors)) {
   $msg = urlencode(implode(' ', $errors));
