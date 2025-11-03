@@ -5,8 +5,13 @@
  */
 
 // Load API credentials from .env
-define('SIGHTENGINE_API_USER', getenv('SIGHTENGINE_API_USER') ?: '');
-define('SIGHTENGINE_API_SECRET', getenv('SIGHTENGINE_API_SECRET') ?: '');
+// Define constants only if not already defined (in case image_validator.php was loaded first)
+if (!defined('SIGHTENGINE_API_USER')) {
+    define('SIGHTENGINE_API_USER', getenv('SIGHTENGINE_API_USER') ?: '');
+}
+if (!defined('SIGHTENGINE_API_SECRET')) {
+    define('SIGHTENGINE_API_SECRET', getenv('SIGHTENGINE_API_SECRET') ?: '');
+}
 
 /**
  * Validate text content using Sightengine API
