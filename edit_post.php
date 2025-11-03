@@ -1,9 +1,4 @@
 <?php
-// Force error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php'); 
@@ -33,7 +28,7 @@ try {
     $post = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$post) {
-        header("Location: " . $basePath . "/my_posts.php?msg=notfound");
+        header("Location: " . $basePath . "/my_posts.php?msg=" . urlencode("Post not found."));
         exit;
     }
     
@@ -42,8 +37,8 @@ try {
     $existing_image = $stmt->fetch(PDO::FETCH_ASSOC);
     
 } catch (Throwable $e) {
-    error_log($e->getMessage()); // Log error instead of exiting silently
-    header("Location: " . $basePath . "/my_posts.php?msg=dberror");
+    error_log($e->getMessage());
+    header("Location: " . $basePath . "/my_posts.php?msg=" . urlencode("Database error."));
     exit;
 }
 
@@ -73,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Update post in the database
             $stmt = $pdo->prepare(
-                "UPDATE posts SET type = ?, title = ?, description = ?, location = ?, lost_date = ?
+                "UPDATE posts SET type = ?, title = ?, description = ?, location = ?, lost_date = ?, updated_at = NOW()
                  WHERE id = ? AND user_id = ?"
             );
             $stmt->execute([$type, $title, $description, $location, $lost_date ?: null, $post_id, $_SESSION['user_id']]);
@@ -82,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 // Delete old image file and database record if one exists
                 if ($existing_image) {
-                    $old_filepath = ROOT_PATH . $existing_image['path']; // Use universal ROOT_PATH
+                    $old_filepath = ROOT_PATH . $existing_image['path'];
                     if (file_exists($old_filepath)) {
                         unlink($old_filepath);
                     }
@@ -90,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 
                 // Process and save the new image
-                $upload_dir = ROOT_PATH . '/uploads/'; // Use universal ROOT_PATH
+                $upload_dir = ROOT_PATH . '/uploads/';
                 if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
 
                 $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
@@ -109,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             // Redirect on success
-            header("Location: " . $basePath . "/dashboard.php?msg=" . urlencode("Post updated successfully!"));
+            header("Location: " . $basePath . "/my_posts.php?msg=" . urlencode("Post updated successfully!"));
             exit;
             
         } catch (Throwable $e) {
@@ -118,116 +113,150 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Set page title
+$pageTitle = "Edit Post";
+
+// Include header
+require_once('includes/header.php');
 ?>
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Edit Post – Runnerslist</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="stylesheet" href="<?= $basePath ?>/assets/style.css">
-</head>
-<body class="landing-body">
-  <div class="content-card">
-    <main>
-      <a href="<?= $basePath ?>/dashboard.php" class="back-arrow">&larr; Back to Dashboard</a>
-      <h1>Edit Post</h1>
 
-      <?php if (!empty($errors['general'])): ?><div class="err"><?= htmlspecialchars($errors['general']) ?></div><?php endif; ?>
+<!-- Page content starts here -->
+<div class="page-container">
+    <div class="content-card" style="max-width: 600px;">
+        <a href="<?= $basePath ?>/my_posts.php" class="back-arrow">&larr; Back to My Posts</a>
+        <h1>Edit Post</h1>
 
-      <div class="form-container">
-        <form method="POST" enctype="multipart/form-data" action="<?= $basePath ?>/edit_post.php?id=<?= $post_id ?>">
-            <div>
-                <label for="type">Type *</label>
-                <select name="type" id="type" required>
-                    <option value="">Select...</option>
-                    <option value="lost" <?= ($post['type'] ?? '') === 'lost' ? 'selected' : '' ?>>Lost</option>
-                    <option value="found" <?= ($post['type'] ?? '') === 'found' ? 'selected' : '' ?>>Found</option>
-                </select>
-                <?php if (!empty($errors['type'])): ?><div class="err-small"><?= $errors['type'] ?></div><?php endif; ?>
-            </div>
+        <?php if (!empty($errors['general'])): ?>
+            <div class="err"><?= htmlspecialchars($errors['general']) ?></div>
+        <?php endif; ?>
 
-            <div>
-                <label for="title">Title *</label>
-                <input type="text" name="title" id="title" value="<?= htmlspecialchars($post['title'] ?? '') ?>" required>
-                <?php if (!empty($errors['title'])): ?><div class="err-small"><?= $errors['title'] ?></div><?php endif; ?>
-            </div>
+        <div class="form-container">
+            <form method="POST" enctype="multipart/form-data" action="<?= $basePath ?>/edit_post.php?id=<?= $post_id ?>">
+                
+                <div>
+                    <label for="type">Type *</label>
+                    <div class="type-selector">
+                        <div class="type-option <?= ($post['type'] ?? '') === 'lost' ? 'active' : '' ?>" data-value="lost">Lost</div>
+                        <div class="type-option <?= ($post['type'] ?? '') === 'found' ? 'active' : '' ?>" data-value="found">Found</div>
+                    </div>
+                    <input type="hidden" name="type" id="type-input" value="<?= htmlspecialchars($post['type'] ?? '') ?>" required>
+                    <?php if (!empty($errors['type'])): ?>
+                        <div class="err-small"><?= $errors['type'] ?></div>
+                    <?php endif; ?>
+                </div>
 
-            <div>
-                <label for="description">Description *</label>
-                <textarea name="description" id="description" rows="4" required><?= htmlspecialchars($post['description'] ?? '') ?></textarea>
-                <?php if (!empty($errors['description'])): ?><div class="err-small"><?= $errors['description'] ?></div><?php endif; ?>
-            </div>
+                <div>
+                    <label for="title">Title *</label>
+                    <input type="text" name="title" id="title" value="<?= htmlspecialchars($post['title'] ?? '') ?>" required>
+                    <?php if (!empty($errors['title'])): ?>
+                        <div class="err-small"><?= $errors['title'] ?></div>
+                    <?php endif; ?>
+                </div>
 
-            <div>
-                <label for="location">Location *</label>
-                <input type="text" name="location" id="location" value="<?= htmlspecialchars($post['location'] ?? '') ?>" required>
-                <?php if (!empty($errors['location'])): ?><div class="err-small"><?= $errors['location'] ?></div><?php endif; ?>
-            </div>
+                <div>
+                    <label for="description">Description *</label>
+                    <textarea name="description" id="description" rows="5" required><?= htmlspecialchars($post['description'] ?? '') ?></textarea>
+                    <?php if (!empty($errors['description'])): ?>
+                        <div class="err-small"><?= $errors['description'] ?></div>
+                    <?php endif; ?>
+                </div>
 
-            <div>
-                <label for="lost_date">Date (optional)</label>
-                <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($post['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
-            </div>
+                <div>
+                    <label for="location">Location *</label>
+                    <input type="text" name="location" id="location" value="<?= htmlspecialchars($post['location'] ?? '') ?>" required>
+                    <?php if (!empty($errors['location'])): ?>
+                        <div class="err-small"><?= $errors['location'] ?></div>
+                    <?php endif; ?>
+                </div>
 
-            <?php if ($existing_image): ?>
-            <div>
-                <label>Current Image</label>
-                <img src="<?= $basePath . htmlspecialchars($existing_image['path']) ?>" alt="Current post image" style="max-width: 200px; border-radius: 8px;">
-            </div>
-            <?php endif; ?>
+                <div>
+                    <label for="lost_date">Date (optional)</label>
+                    <input type="date" name="lost_date" id="lost_date" value="<?= htmlspecialchars($post['lost_date'] ?? '') ?>" max="<?= date('Y-m-d') ?>">
+                </div>
 
-            <div>
-                <label for="image">Change Image (optional)</label>
-                <input 
-                    type="file" 
-                    name="image" 
-                    id="image" 
-                    accept=".jpg,.jpeg,.png,.webp"
-                    onchange="validateImage(this)"
-                >
-                <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
-                <?php if (!empty($errors['image'])): ?><div class="err-small"><?= $errors['image'] ?></div><?php endif; ?>
-            </div>
+                <?php if ($existing_image): ?>
+                <div>
+                    <label>Current Image</label>
+                    <img src="<?= $basePath . htmlspecialchars($existing_image['path']) ?>" alt="Current post image" style="max-width: 200px; border-radius: 8px; display: block; margin-top: 0.5rem;">
+                </div>
+                <?php endif; ?>
 
-            <button type="submit" class="btn">Update Post</button>
-        </form>
-      </div>
-    </main>
-  </div>
-  <script>
-  function validateImage(input) {
-      if (!input.files || !input.files[0]) return;
-      
-      const file = input.files[0];
-      const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-      const maxSize = 5 * 1024 * 1024;
-      
-      const fileName = file.name.toLowerCase();
-      const extension = fileName.split('.').pop();
-      
-      if (!allowedExtensions.includes(extension)) {
-          alert('🚫 INVALID FILE TYPE!\n\n' +
-                'File: ' + file.name + '\n' +
-                'Type: .' + extension.toUpperCase() + '\n\n' +
-                '✅ ALLOWED: JPG, PNG, WEBP only\n' +
-                '❌ NOT ALLOWED: GIF, PDF, TXT, etc.');
-          input.value = '';
-          return false;
-      }
-      
-      if (file.size > maxSize) {
-          alert('🚫 FILE TOO LARGE!\n\n' +
-                'File: ' + file.name + '\n' +
-                'Size: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB\n\n' +
-                'Maximum allowed: 5 MB');
-          input.value = '';
-          return false;
-      }
-      
-      console.log('✅ Valid file selected: ' + file.name);
-      return true;
-  }
-  </script>
-</body>
-</html>
+                <div>
+                    <label for="image"><?= $existing_image ? 'Change Image (optional)' : 'Add Image (optional)' ?></label>
+                    <input 
+                        type="file" 
+                        name="image" 
+                        id="image" 
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onchange="validateImage(this)"
+                    >
+                    <small style="color: #d32f2f; font-weight: 500;">⚠️ Only JPG, PNG, and WEBP allowed. Max 5MB. NO GIFs.</small>
+                    <?php if (!empty($errors['image'])): ?>
+                        <div class="err-small"><?= $errors['image'] ?></div>
+                    <?php endif; ?>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Update Post</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function validateImage(input) {
+    if (!input.files || !input.files[0]) return;
+    
+    const file = input.files[0];
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    
+    // Get file extension
+    const fileName = file.name.toLowerCase();
+    const extension = fileName.split('.').pop();
+    
+    // Check extension
+    if (!allowedExtensions.includes(extension)) {
+        alert('🚫 INVALID FILE TYPE!\n\n' +
+              'File: ' + file.name + '\n' +
+              'Type: .' + extension.toUpperCase() + '\n\n' +
+              '✅ ALLOWED: JPG, PNG, WEBP only\n' +
+              '❌ NOT ALLOWED: GIF, PDF, TXT, etc.');
+        input.value = '';
+        return false;
+    }
+    
+    // Check file size
+    if (file.size > maxSize) {
+        alert('🚫 FILE TOO LARGE!\n\n' +
+              'File: ' + file.name + '\n' +
+              'Size: ' + (file.size / 1024 / 1024).toFixed(2) + ' MB\n\n' +
+              'Maximum allowed: 5 MB');
+        input.value = '';
+        return false;
+    }
+    
+    // File is valid, show confirmation
+    console.log('✅ Valid file selected: ' + file.name);
+    return true;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const typeSelector = document.querySelector('.type-selector');
+    const hiddenInput = document.getElementById('type-input');
+    const options = document.querySelectorAll('.type-option');
+
+    typeSelector.addEventListener('click', function(e) {
+        if (e.target && e.target.matches('.type-option')) {
+            const selectedValue = e.target.dataset.value;
+            hiddenInput.value = selectedValue;
+
+            // Update active class on buttons
+            options.forEach(option => option.classList.remove('active'));
+            e.target.classList.add('active');
+        }
+    });
+});
+</script>
+
+<?php require_once('includes/footer.php'); ?>
