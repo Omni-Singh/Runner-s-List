@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Update post in the database
             $stmt = $pdo->prepare(
-                "UPDATE posts SET type = ?, title = ?, description = ?, location = ?, lost_date = ?, updated_at = NOW()
+                "UPDATE posts SET type = ?, title = ?, description = ?, location = ?, lost_date = ?
                  WHERE id = ? AND user_id = ?"
             );
             $stmt->execute([$type, $title, $description, $location, $lost_date ?: null, $post_id, $_SESSION['user_id']]);
