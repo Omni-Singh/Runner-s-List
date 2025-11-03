@@ -12,6 +12,10 @@ $postsPerPage = 10;
 $currentPage = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $offset = ($currentPage - 1) * $postsPerPage;
 
+// Search functionality
+$search_query = trim($_GET['search'] ?? '');
+$search_param = '%' . $search_query . '%';
+
 $posts = [];
 $totalPosts = 0;
 $totalPages = 0;
@@ -19,9 +23,20 @@ $totalPages = 0;
 try {
     $pdo = get_pdo_connection();
     
+    // Build WHERE clause for search
+    $whereClause = "WHERE p.status = 'ACTIVE'";
+    $params = [];
+
+    if ($search_query !== '') {
+        $whereClause .= " AND (p.type LIKE :search OR p.title LIKE :search OR p.description LIKE :search)";
+        $params[':search'] = $search_param;
+    }
+
+
     // Get total count of active posts
-    $countSql = "SELECT COUNT(*) as total FROM posts WHERE status = 'ACTIVE'";
-    $countStmt = $pdo->query($countSql);
+    $countSql = "SELECT COUNT(*) as total FROM posts p " . $whereClause;
+    $countStmt = $pdo->prepare($countSql);
+    $countStmt->execute($params);
     $totalPosts = (int)$countStmt->fetch(PDO::FETCH_ASSOC)['total'];
     $totalPages = ceil($totalPosts / $postsPerPage);
     
@@ -30,11 +45,17 @@ try {
                 (SELECT path FROM post_images WHERE post_id = p.id LIMIT 1) as image_path
             FROM posts p
             JOIN users u ON p.user_id = u.id
-            WHERE p.status = 'ACTIVE'
+            " . $whereClause . "
             ORDER BY p.created_at DESC
             LIMIT :limit OFFSET :offset";
     
     $stmt = $pdo->prepare($sql);
+
+    // Bind search parameter if exists
+    if ($search_query !== '') {
+        $stmt->bindValue(':search', $search_param, PDO::PARAM_STR);
+    }
+
     $stmt->bindValue(':limit', $postsPerPage, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
@@ -74,7 +95,7 @@ require_once('includes/header.php');
             <div class="pagination">
                 <!-- Previous button -->
                 <?php if ($currentPage > 1): ?>
-                    <a href="?page=<?= $currentPage - 1 ?>" class="pagination-btn">
+                    <a href="?page=<?= $currentPage - 1 ?><?= $search_query ? '&search=' . urlencode($search_query) : '' ?>" class="pagination-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
                         Previous
                     </a>
@@ -89,7 +110,7 @@ require_once('includes/header.php');
                     
                     // First page + ellipsis
                     if ($startPage > 1): ?>
-                        <a href="?page=1" class="pagination-number">1</a>
+                        <a href="?page=1<?= $search_query ? '&search=' . urlencode($search_query) : '' ?>" class="pagination-number">1</a>
                         <?php if ($startPage > 2): ?>
                             <span class="pagination-ellipsis">...</span>
                         <?php endif; ?>
@@ -97,7 +118,7 @@ require_once('includes/header.php');
                     
                     <!-- Page numbers -->
                     <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                        <a href="?page=<?= $i ?>" class="pagination-number <?= $i == $currentPage ? 'active' : '' ?>">
+                        <a href="?page=<?= $i ?><?= $search_query ? '&search=' . urlencode($search_query) : '' ?>" class="pagination-number <?= $i == $currentPage ? 'active' : '' ?>">
                             <?= $i ?>
                         </a>
                     <?php endfor; ?>
@@ -107,13 +128,13 @@ require_once('includes/header.php');
                         <?php if ($endPage < $totalPages - 1): ?>
                             <span class="pagination-ellipsis">...</span>
                         <?php endif; ?>
-                        <a href="?page=<?= $totalPages ?>" class="pagination-number"><?= $totalPages ?></a>
+                        <a href="?page=<?= $totalPages ?><?= $search_query ? '&search=' . urlencode($search_query) : '' ?>" class="pagination-number"><?= $totalPages ?></a>
                     <?php endif; ?>
                 </div>
                 
                 <!-- Next button -->
                 <?php if ($currentPage < $totalPages): ?>
-                    <a href="?page=<?= $currentPage + 1 ?>" class="pagination-btn">
+                    <a href="?page=<?= $currentPage + 1 ?><?= $search_query ? '&search=' . urlencode($search_query) : '' ?>" class="pagination-btn">
                         Next
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </a>
