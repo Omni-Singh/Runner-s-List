@@ -115,17 +115,23 @@ try {
                 <h2>Recently Found Items</h2>
                 <a href="<?= $basePath ?>/login.php">View All &rarr;</a>
             </div>
-            <div class="items-container">
-                <?php foreach ($recent_items as $item): ?>
-                    <a href="<?= $basePath ?>/login.php" class="item-card" style="text-decoration: none; color: inherit;">
-                        <div class="item-image" style="background-image: url('<?= $basePath . htmlspecialchars($item['image_path'] ?? '/assets/placeholder.png') ?>');"></div>
-                        <div class="item-info">
-                            <h3><?= htmlspecialchars($item['title']) ?></h3>
-                            <p><?= htmlspecialchars($item['location']) ?> &bull; <?= date('M j', strtotime($item['created_at'])) ?></p>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+            <!-- Auto-Scrolling Container -->
+            <div class="scroll-container">
+                <div class="scroll-content" id="scrollContent">
+                    <?php 
+                    // Display items twice
+                    for ($i = 0; $i < 2; $i++):
+                        foreach ($recent_items as $item): ?>
+                            <a href="<?= $basePath ?>/login.php" class="item-card" style="text-decoration: none; color: inherit;">
+                                <div class="item-image" style="background-image: url('<?= $basePath . htmlspecialchars($item['image_path'] ?? '/assets/placeholder.png') ?>');"></div>
+                                <div class="item-info">
+                                    <h3><?= htmlspecialchars($item['title']) ?></h3>
+                                    <p><?= htmlspecialchars($item['location']) ?> &bull; <?= date('M j', strtotime($item['created_at'])) ?></p>
+                                </div>
+                            </a>
+                        <?php endforeach;
+                    endfor; ?>
+                </div>
         </section>
         <?php endif; ?>
 
