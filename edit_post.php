@@ -71,6 +71,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors['description'] = $description_check;
         }
     }
+
+    if ($location !== '') {
+        $location_check = validate_text_content($location, 'location');
+        if ($location_check !== true) {
+            $errors['location'] = $location_check;
+        }
+    }
     
     // Image validation if a new file is uploaded
     if (!empty($_FILES['image']['name'])) {

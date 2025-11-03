@@ -27,19 +27,7 @@
         <a href="<?= $basePath ?>/post_create.php" class="btn btn-primary nav-btn">+ Create Post</a>
         <a href="<?= $basePath ?>/my_posts.php" class="btn btn-secondary nav-btn">My Posts</a>
     </div>
-
-    <!-- Search Bar -->
-    <div class="search-container">
-        <form method="GET" action="<?= $basePath ?>/dashboard.php">
-        <input 
-            type="search" 
-            name="search" 
-            placeholder="Search posts..." 
-            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
-        >
-    </form>
-    </div>
-    
+ 
     <!-- User Actions (Inbox, Account, Logout) -->
     <div class="header-actions">
         <!-- Inbox Icon -->
