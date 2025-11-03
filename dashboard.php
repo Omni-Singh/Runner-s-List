@@ -30,8 +30,11 @@ try {
 
     // Add search condition
     if ($searchQuery !== '') {
-        $whereConditions[] = "(p.title LIKE :search OR p.description LIKE :search OR p.location LIKE :search)";
-        $params[':search'] = '%' . $searchQuery . '%';
+        $searchParam = '%' . $searchQuery . '%';
+        $whereConditions[] = "(p.title LIKE :search_title OR p.description LIKE :search_desc OR p.location LIKE :search_loc)";
+        $params[':search_title'] = $searchParam;
+        $params[':search_desc'] = $searchParam;
+        $params[':search_loc'] = $searchParam;
     }
     
     // Add type filter
