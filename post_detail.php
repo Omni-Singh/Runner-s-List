@@ -3,7 +3,7 @@ require_once('includes/config.php');
 require_once('includes/functions.php');
 require_once('includes/validators.php');
 
-// --- Auth check ---
+//  Auth check ---
 if (empty($_SESSION['user_id'])) {
     header("Location: " . $basePath . "/login.php");
     exit;
@@ -102,6 +102,19 @@ require_once('includes/header.php');
                     <div class="post-detail-actions">
                         <a href="<?= $basePath ?>/edit_post.php?id=<?= $post['id'] ?>" class="btn">Edit Post</a>
                         <a href="<?= $basePath ?>/delete_post.php?id=<?= $post['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post? This action cannot be undone.')">Delete Post</a>
+
+                         <!-- Resolve button -->
+                    <form method="post"
+                          action="<?= $basePath ?>/resolve_post.php"
+                          class="form-container"
+                          style="margin-top: 1rem;"
+                          onsubmit="return confirm('Are you sure you want to mark this post as resolved?');">
+                        <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                        <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
+                        <button type="submit" class="btn btn-secondary">Resolve</button>
+                    </form>
+
+                        
                     </div>
                 </div>
             <?php else: ?>
@@ -118,6 +131,7 @@ require_once('includes/header.php');
                     
                     <p class="note">Describe unique details about the item to help the owner verify your claim.</p>
                     
+                    <!-- Contact form -->
                     <form method="post" action="<?= $basePath ?>/contact_submit.php" class="form-container">
                         <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
                         <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
@@ -140,6 +154,18 @@ require_once('includes/header.php');
 
                         <button type="submit" class="btn btn-primary">Send Message</button>
                     </form>
+
+                    <!-- Resolve button -->
+                    <form method="post"
+                          action="<?= $basePath ?>/resolve_post.php"
+                          class="form-container"
+                          style="margin-top: 1rem;"
+                          onsubmit="return confirm('Are you sure you want to mark this post as resolved?');">
+                        <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+                        <input type="hidden" name="post_id" value="<?= (int)$post['id'] ?>">
+                        <button type="submit" class="btn btn-secondary">Resolve</button>
+                    </form>
+
                 </div>
             <?php endif; ?>
         </div>
