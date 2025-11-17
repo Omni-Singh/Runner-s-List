@@ -1365,3 +1365,64 @@ body {
 .dashboard-footer a:hover {
     text-decoration: underline;
 }
+
+.post-detail-actions form {
+    margin: 0 !important;
+    display: inline-block;
+}
+
+.post-detail-actions .btn-secondary {
+    background-color: #28a745;
+    color: white;
+    border: 2px solid #28a745;
+}
+
+.post-detail-actions .btn-secondary:hover {
+    background-color: #218838;
+    border-color: #218838;
+}
+
+.post-detail-actions .btn,
+.post-detail-actions button.btn {
+    flex: 1 1 auto;
+    min-width: 130px;
+    max-width: 200px;
+    padding: 12px 20px;
+    text-align: center;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.owner-actions-card .post-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.contact-card form button.btn-secondary {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.contact-card form button.btn-secondary:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .owner-actions-card .post-detail-actions {
+        flex-direction: column;
+    }
+    
+    .post-detail-actions .btn,
+    .post-detail-actions button.btn {
+        width: 100%;
+        max-width: 100%;
+    }
+}

@@ -16,7 +16,8 @@ try {
         "SELECT p.id, p.title, p.location, p.created_at, 
          (SELECT path FROM post_images WHERE post_id = p.id LIMIT 1) as image_path
          FROM posts p 
-         WHERE p.status = 'ACTIVE' AND p.type = 'found' 
+         WHERE p.status = 'ACTIVE' AND p.type = 'found'
+         AND EXISTS (SELECT 1 FROM post_images WHERE post_id = p.id)
          ORDER BY p.created_at DESC 
          LIMIT 6"
     );
@@ -123,7 +124,7 @@ try {
                     for ($i = 0; $i < 2; $i++):
                         foreach ($recent_items as $item): ?>
                             <a href="<?= $basePath ?>/login.php" class="item-card" style="text-decoration: none; color: inherit;">
-                                <div class="item-image" style="background-image: url('<?= $basePath . htmlspecialchars($item['image_path'] ?? '/assets/placeholder.png') ?>');"></div>
+                                <div class="item-image" style="background-image: url('<?= $basePath . htmlspecialchars($item['image_path'] ?? '/assets/found_placeholder.svg') ?>');"></div>Retry
                                 <div class="item-info">
                                     <h3><?= htmlspecialchars($item['title']) ?></h3>
                                     <p><?= htmlspecialchars($item['location']) ?> &bull; <?= date('M j', strtotime($item['created_at'])) ?></p>

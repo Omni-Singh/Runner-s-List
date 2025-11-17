@@ -98,8 +98,8 @@ require_once('includes/header.php');
             <?php if (!empty($active_posts)): ?>
                 <?php foreach ($active_posts as $post): ?>
                     <div class="my-post-card">
-                        <div class="my-post-image" style="background-image: url('<?= $basePath . ($post['image_path'] ? htmlspecialchars($post['image_path']) : '/assets/placeholder.png') ?>');"></div>
-                        <div class="my-post-content">
+                        <?php $placeholder = ($post['type'] === 'lost') ? '/assets/lost_placeholder.svg' : '/assets/found_placeholder.svg'; ?>
+                        <div class="my-post-image" style="background-image: url('<?= $basePath . ($post['image_path'] ? htmlspecialchars($post['image_path']) : $placeholder) ?>');"></div>                        <div class="my-post-content">
                             <h3>[<?= strtoupper(htmlspecialchars($post['type'])) ?>] <?= htmlspecialchars($post['title']) ?></h3>
                             <p class="post-meta">Created on <?= date('M j, Y', strtotime($post['created_at'])) ?></p>
                             <div class="my-post-actions">
