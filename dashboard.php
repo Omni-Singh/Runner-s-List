@@ -164,8 +164,8 @@ require_once('includes/header.php');
     <?php if (!empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
             <div class="post-card">
-                <div class="post-image" style="background-image: url('<?= $basePath . ($post['image_path'] ? htmlspecialchars($post['image_path']) : '/assets/placeholder.png') ?>');"></div>
-                <div class="post-content">
+                <?php $placeholder = ($post['type'] === 'lost') ? '/assets/lost_placeholder.svg' : '/assets/found_placeholder.svg'; ?>
+                <div class="post-image" style="background-image: url('<?= $basePath . ($post['image_path'] ? htmlspecialchars($post['image_path']) : $placeholder) ?>');"></div>                <div class="post-content">
                     <h3>[<?= strtoupper(htmlspecialchars($post['type'])) ?>] <?= htmlspecialchars($post['title']) ?></h3>
                     <p class="post-meta">Posted by <?= htmlspecialchars($post['full_name']) ?> on <?= date('M j, Y', strtotime($post['created_at'])) ?></p>
                     <p><?= htmlspecialchars(substr($post['description'], 0, 100)) ?>...</p>
