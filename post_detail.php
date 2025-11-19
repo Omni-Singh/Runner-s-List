@@ -77,6 +77,15 @@ require_once('includes/header.php');
                 <div class="post-detail-image">
                     <img src="<?= $basePath . htmlspecialchars($images[0]['path']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
                 </div>
+            <?php else: ?>
+                <?php 
+                    $placeholder = ($post['type'] === 'lost') 
+                        ? '/assets/lost_placeholder.svg' 
+                        : '/assets/found_placeholder.svg'; 
+                ?>
+                <div class="post-detail-image">
+                    <img src="<?= $basePath . $placeholder ?>" alt="..." style="opacity: 0.6;">
+                </div>
             <?php endif; ?>
 
             <div class="post-detail-section">
