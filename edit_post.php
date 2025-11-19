@@ -101,7 +101,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  WHERE id = ? AND user_id = ?"
             );
             $stmt->execute([$type, $title, $description, $location, $lost_date ?: null, $post_id, $_SESSION['user_id']]);
-            
+            // Handle image deletion via checkbox
+            if (isset($_POST['delete_image']) && $_POST['delete_image'] === '1') {
+                if ($existing_image) {
+                    $old_filepath = __DIR__ . $existing_image['path'];
+                    if (file_exists($old_filepath)) {
+                        unlink($old_filepath);
+                    }
+                    $pdo->prepare("DELETE FROM post_images WHERE id = ?")->execute([$existing_image['id']]);
+                    $existing_image = null; // Clear so it doesn't show anymore
+                }
+            }
+
             // Handle new image upload
             if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 // Delete old image file and database record if one exists
@@ -213,16 +224,14 @@ require_once('includes/header.php');
                 <div>
                     <label>Current Image</label>
                     <img src="<?= $basePath . htmlspecialchars($existing_image['path']) ?>" alt="Current post image" style="max-width: 200px; border-radius: 8px; display: block; margin-top: 0.5rem;">
-                    <!-- DELETE IMAGE FORM ← NEW SECTION -->
-                    <form method="post" action="<?= $basePath ?>/delete_post_image.php" 
-                          style="margin-top: 0.75rem;" 
-                          onsubmit="return confirm('Are you sure you want to delete this image?');">
-                        <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
-                        <input type="hidden" name="post_id" value="<?= $post_id ?>">
-                        <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem;">
-                            Delete Image
-                        </button>
-                    </form>
+                    
+                    <!-- Delete Image Checkbox -->
+                    <div style="margin-top: 0.75rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="delete_image" value="1" style="width: auto; margin: 0;">
+                            <span style="color: #d32f2f; font-weight: 500;">☐ Delete this image</span>
+                        </label>
+                    </div>
                 </div>
                 <?php endif; ?>
 
