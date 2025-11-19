@@ -11,8 +11,14 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
+// --- CSRF Token Setup ---
+if (empty($_SESSION['csrf'])) { 
+    $_SESSION['csrf'] = bin2hex(random_bytes(32)); 
+}
+
 // --- Initial Setup ---
 $errors = [];
+$success_message = $_GET['msg'] ?? '';
 $post = null;
 $post_id = (int)($_GET['id'] ?? 0);
 
@@ -95,7 +101,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                  WHERE id = ? AND user_id = ?"
             );
             $stmt->execute([$type, $title, $description, $location, $lost_date ?: null, $post_id, $_SESSION['user_id']]);
-            
+            // Handle image deletion via checkbox
+            if (isset($_POST['delete_image']) && $_POST['delete_image'] === '1') {
+                if ($existing_image) {
+                    $old_filepath = __DIR__ . $existing_image['path'];
+                    if (file_exists($old_filepath)) {
+                        unlink($old_filepath);
+                    }
+                    $pdo->prepare("DELETE FROM post_images WHERE id = ?")->execute([$existing_image['id']]);
+                    $existing_image = null; // Clear so it doesn't show anymore
+                }
+            }
+
             // Handle new image upload
             if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 // Delete old image file and database record if one exists
@@ -140,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Set page title
 $pageTitle = "Edit Post";
 
+
 // Include header
 require_once('includes/header.php');
 ?>
@@ -149,6 +167,10 @@ require_once('includes/header.php');
     <div class="content-card" style="max-width: 600px;">
         <a href="<?= $basePath ?>/my_posts.php" class="back-arrow">&larr; Back to My Posts</a>
         <h1>Edit Post</h1>
+
+        <?php if ($success_message): ?>  // ← NEW BLOCK
+            <div class="ok"><?= htmlspecialchars($success_message) ?></div>
+        <?php endif; ?>
 
         <?php if (!empty($errors['general'])): ?>
             <div class="err"><?= htmlspecialchars($errors['general']) ?></div>
@@ -202,6 +224,14 @@ require_once('includes/header.php');
                 <div>
                     <label>Current Image</label>
                     <img src="<?= $basePath . htmlspecialchars($existing_image['path']) ?>" alt="Current post image" style="max-width: 200px; border-radius: 8px; display: block; margin-top: 0.5rem;">
+                    
+                    <!-- Delete Image Checkbox -->
+                    <div style="margin-top: 0.75rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" name="delete_image" value="1" style="width: auto; margin: 0;">
+                            <span style="color: #d32f2f; font-weight: 500;"> Delete this image</span>
+                        </label>
+                    </div>
                 </div>
                 <?php endif; ?>
 
