@@ -11,8 +11,14 @@ if (empty($_SESSION['user_id'])) {
     exit;
 }
 
+// --- CSRF Token Setup ---
+if (empty($_SESSION['csrf'])) { 
+    $_SESSION['csrf'] = bin2hex(random_bytes(32)); 
+}
+
 // --- Initial Setup ---
 $errors = [];
+$success_message = $_GET['msg'] ?? '';
 $post = null;
 $post_id = (int)($_GET['id'] ?? 0);
 
@@ -140,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Set page title
 $pageTitle = "Edit Post";
 
+
 // Include header
 require_once('includes/header.php');
 ?>
@@ -149,6 +156,10 @@ require_once('includes/header.php');
     <div class="content-card" style="max-width: 600px;">
         <a href="<?= $basePath ?>/my_posts.php" class="back-arrow">&larr; Back to My Posts</a>
         <h1>Edit Post</h1>
+
+        <?php if ($success_message): ?>  // ← NEW BLOCK
+            <div class="ok"><?= htmlspecialchars($success_message) ?></div>
+        <?php endif; ?>
 
         <?php if (!empty($errors['general'])): ?>
             <div class="err"><?= htmlspecialchars($errors['general']) ?></div>
@@ -202,6 +213,16 @@ require_once('includes/header.php');
                 <div>
                     <label>Current Image</label>
                     <img src="<?= $basePath . htmlspecialchars($existing_image['path']) ?>" alt="Current post image" style="max-width: 200px; border-radius: 8px; display: block; margin-top: 0.5rem;">
+                    <!-- DELETE IMAGE FORM ← NEW SECTION -->
+                    <form method="post" action="<?= $basePath ?>/delete_post_image.php" 
+                          style="margin-top: 0.75rem;" 
+                          onsubmit="return confirm('Are you sure you want to delete this image?');">
+                        <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']) ?>">
+                        <input type="hidden" name="post_id" value="<?= $post_id ?>">
+                        <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem;">
+                            Delete Image
+                        </button>
+                    </form>
                 </div>
                 <?php endif; ?>
 
