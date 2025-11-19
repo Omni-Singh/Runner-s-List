@@ -229,7 +229,7 @@ require_once('includes/header.php');
                     <div style="margin-top: 0.75rem;">
                         <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
                             <input type="checkbox" name="delete_image" value="1" style="width: auto; margin: 0;">
-                            <span style="color: #d32f2f; font-weight: 500;">☐ Delete this image</span>
+                            <span style="color: #d32f2f; font-weight: 500;"> Delete this image</span>
                         </label>
                     </div>
                 </div>
