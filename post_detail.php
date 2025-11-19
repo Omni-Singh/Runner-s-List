@@ -83,6 +83,9 @@ require_once('includes/header.php');
                         ? '/assets/lost_placeholder.svg' 
                         : '/assets/found_placeholder.svg'; 
                 ?>
+                <div class="post-detail-image">
+                    <img src="<?= $basePath . $placeholder ?>" alt="..." style="opacity: 0.6;">
+                </div>
             <?php endif; ?>
 
             <div class="post-detail-section">
