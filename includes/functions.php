@@ -24,3 +24,34 @@ function get_pdo_connection() {
         die("Error: A database connection could not be established.");
     }
 }
+
+// Get unread message count for a user
+function get_unread_message_count($user_id) {
+    try {
+        $pdo = get_pdo_connection();
+        $stmt = $pdo->prepare("
+            SELECT COUNT(*) 
+            FROM messages 
+            WHERE receiver_id = ? 
+            AND is_read = FALSE
+        ");
+        $stmt->execute([$user_id]);
+        return (int)$stmt->fetchColumn();
+    } catch (Throwable $e) {
+        error_log($e->getMessage());
+        return 0;
+    }
+}
+
+// Format time ago /
+function time_ago($datetime) {
+    $time = strtotime($datetime);
+    $diff = time() - $time;
+    
+    if ($diff < 60) return 'Just now';
+    if ($diff < 3600) return floor($diff / 60) . 'm ago';
+    if ($diff < 86400) return floor($diff / 3600) . 'h ago';
+    if ($diff < 604800) return floor($diff / 86400) . 'd ago';
+    
+    return date('M j', $time);
+}
